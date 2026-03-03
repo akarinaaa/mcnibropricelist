@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Shop Price List</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #313338; color: #dcddde; font-family: 'gg sans','Noto Sans','Helvetica Neue',Helvetica,Arial,sans-serif; padding: 20px; min-height: 100vh; }
+  .container { max-width: 960px; margin: 0 auto; }
+  .discord-msg { background: #2b2d31; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; border-left: 4px solid #5865f2; }
+  .server-header { text-align: center; padding: 20px; margin-bottom: 20px; }
+  .server-header h1 { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: 1px; }
+  .server-header .subtitle { color: #b5bac1; font-size: 13px; margin-top: 6px; }
+  .badge { display: inline-block; background: #5865f2; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+  .category-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #b5bac1; margin: 18px 0 8px 0; display: flex; align-items: center; gap: 8px; }
+  .category-title::after { content: ''; flex: 1; height: 1px; background: #3f4147; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 4px; }
+  .item { display: flex; justify-content: space-between; align-items: center; background: #2b2d31; border-radius: 4px; padding: 5px 10px; font-size: 13px; }
+  .item:hover { background: #35373c; }
+  .item-name { color: #dcddde; font-weight: 500; }
+  .item-price { font-weight: 700; font-size: 12px; white-space: nowrap; margin-left: 8px; }
+  .p1 { color: #23a55a; } .p2 { color: #f0b232; } .p3 { color: #fb8c00; } .p4 { color: #da373c; } .p5 { color: #e040fb; }
+  .section-block { background: #1e1f22; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .footer { text-align: center; color: #6d6f78; font-size: 11px; margin-top: 24px; padding-top: 12px; border-top: 1px solid #3f4147; }
+</style>
+</head>
+<body><div class="container">
+<div class="server-header discord-msg">
+  <h1>🛒 SHOP PRICE LIST <span class="badge">OFFICIAL</span></h1>
+  <div class="subtitle">All prices are per item &nbsp;|&nbsp; Currency: 💰 Coins</div>
+</div>
+<div class="section-block">
+<div class="category-title">🪵 Logs</div>
+<div class="grid">
+<div class="item"><span class="item-name">Acacia Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Bamboo Block</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Birch Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Cherry Log</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Crimson Stem</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Dark Oak Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Jungle Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Mangrove Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Oak Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Pale Oak Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Spruce Log</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Warped Stem</span><span class="item-price p1">💰 2.5</span></div>
+</div>
+<div class="category-title">🪵 Stripped Logs</div>
+<div class="grid">
+<div class="item"><span class="item-name">Stripped Acacia Log</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Stripped Birch Log</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Stripped Cherry Log</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Stripped Dark Oak Log</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Stripped Jungle Log</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Stripped Mangrove Log</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Stripped Oak Log</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Stripped Spruce Log</span><span class="item-price p1">💰 2.5</span></div>
+</div>
+<div class="category-title">🪚 Planks</div>
+<div class="grid">
+<div class="item"><span class="item-name">Acacia Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Bamboo Planks</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Birch Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Cherry Planks</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Crimson Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Dark Oak Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Jungle Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Mangrove Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Oak Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Spruce Planks</span><span class="item-price p1">💰 0.75</span></div>
+<div class="item"><span class="item-name">Warped Planks</span><span class="item-price p1">💰 0.75</span></div>
+</div>
+<div class="category-title">🍃 Leaves & Saplings</div>
+<div class="grid">
+<div class="item"><span class="item-name">Acacia Leaves</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Acacia Sapling</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Azalea Leaves</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Birch Leaves</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Birch Sapling</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Cherry Leaves</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Cherry Sapling</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Dark Oak Leaves</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Dark Oak Sapling</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Flowering Azalea Leaves</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Jungle Leaves</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Jungle Sapling</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Mangrove Leaves</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Mangrove Propagule</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Oak Leaves</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Oak Sapling</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Spruce Leaves</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Spruce Sapling</span><span class="item-price p1">💰 2</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">⛏️ Stone & Earth</div>
+<div class="grid">
+<div class="item"><span class="item-name">Andesite</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Chiseled Red Sandstone</span><span class="item-price p1">💰 3.5</span></div>
+<div class="item"><span class="item-name">Chiseled Sandstone</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Clay</span><span class="item-price p2">💰 12</span></div>
+<div class="item"><span class="item-name">Clay Ball</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Coarse Dirt</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Cobblestone</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Diorite</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Dirt</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Flint</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Granite</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Grass Block</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Gravel</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Mud</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Mud Bricks</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Mycelium</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Packed Mud</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Podzol</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Polished Andesite</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Polished Diorite</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Polished Granite</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Red Sand</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Red Sandstone</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Rooted Dirt</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Sand</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Sandstone</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Smooth Red Sandstone</span><span class="item-price p1">💰 3.5</span></div>
+<div class="item"><span class="item-name">Smooth Sandstone</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Smooth Stone</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Stone</span><span class="item-price p1">💰 2</span></div>
+</div>
+<div class="category-title">🪨 Deepslate</div>
+<div class="grid">
+<div class="item"><span class="item-name">Chiseled Deepslate</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Cobbled Deepslate</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Deepslate</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Deepslate Bricks</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Deepslate Tiles</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Polished Deepslate</span><span class="item-price p1">💰 3</span></div>
+</div>
+<div class="category-title">🧱 Bricks & Stone Blocks</div>
+<div class="grid">
+<div class="item"><span class="item-name">Brick</span><span class="item-price p2">💰 21</span></div>
+<div class="item"><span class="item-name">Bricks</span><span class="item-price p2">💰 18</span></div>
+<div class="item"><span class="item-name">Chiseled Stone Bricks</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Cracked Stone Bricks</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Mossy Cobblestone</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Mossy Stone Bricks</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Stone Bricks</span><span class="item-price p1">💰 3</span></div>
+</div>
+<div class="category-title">⛏️ Ores (Overworld)</div>
+<div class="grid">
+<div class="item"><span class="item-name">Coal Ore</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Copper Ore</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Diamond Ore</span><span class="item-price p4">💰 200</span></div>
+<div class="item"><span class="item-name">Emerald Ore</span><span class="item-price p4">💰 280</span></div>
+<div class="item"><span class="item-name">Gold Ore</span><span class="item-price p2">💰 45</span></div>
+<div class="item"><span class="item-name">Iron Ore</span><span class="item-price p2">💰 18</span></div>
+<div class="item"><span class="item-name">Lapis Ore</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Redstone Ore</span><span class="item-price p2">💰 30</span></div>
+</div>
+<div class="category-title">⛏️ Deepslate Ores</div>
+<div class="grid">
+<div class="item"><span class="item-name">Ancient Debris</span><span class="item-price p4">💰 300</span></div>
+<div class="item"><span class="item-name">Deepslate Coal Ore</span><span class="item-price p2">💰 18</span></div>
+<div class="item"><span class="item-name">Deepslate Copper Ore</span><span class="item-price p2">💰 18</span></div>
+<div class="item"><span class="item-name">Deepslate Diamond Ore</span><span class="item-price p4">💰 250</span></div>
+<div class="item"><span class="item-name">Deepslate Emerald Ore</span><span class="item-price p4">💰 320</span></div>
+<div class="item"><span class="item-name">Deepslate Gold Ore</span><span class="item-price p3">💰 55</span></div>
+<div class="item"><span class="item-name">Deepslate Iron Ore</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Deepslate Lapis Ore</span><span class="item-price p3">💰 120</span></div>
+<div class="item"><span class="item-name">Deepslate Redstone Ore</span><span class="item-price p2">💰 38</span></div>
+<div class="item"><span class="item-name">Nether Gold Ore</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Nether Quartz Ore</span><span class="item-price p2">💰 25</span></div>
+</div>
+<div class="category-title">💎 Raw Materials & Ingots</div>
+<div class="grid">
+<div class="item"><span class="item-name">Amethyst Shard</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Charcoal</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Coal</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Copper Ingot</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Diamond</span><span class="item-price p3">💰 180</span></div>
+<div class="item"><span class="item-name">Disc Fragment 5</span><span class="item-price p4">💰 200</span></div>
+<div class="item"><span class="item-name">Echo Shard</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">Emerald</span><span class="item-price p4">💰 250</span></div>
+<div class="item"><span class="item-name">Gold Ingot</span><span class="item-price p3">💰 105</span></div>
+<div class="item"><span class="item-name">Gold Nugget</span><span class="item-price p2">💰 12</span></div>
+<div class="item"><span class="item-name">Iron Ingot</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Nugget</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Netherite Ingot</span><span class="item-price p5">💰 1300</span></div>
+<div class="item"><span class="item-name">Netherite Scrap</span><span class="item-price p4">💰 300</span></div>
+<div class="item"><span class="item-name">Netherite Upgrade Template</span><span class="item-price p4">💰 800</span></div>
+<div class="item"><span class="item-name">Quartz</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Raw Copper</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Raw Gold</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Raw Iron</span><span class="item-price p2">💰 15</span></div>
+</div>
+<div class="category-title">🧱 Material Blocks</div>
+<div class="grid">
+<div class="item"><span class="item-name">Amethyst Block</span><span class="item-price p3">💰 120</span></div>
+<div class="item"><span class="item-name">Coal Block</span><span class="item-price p3">💰 135</span></div>
+<div class="item"><span class="item-name">Copper Block</span><span class="item-price p3">💰 90</span></div>
+<div class="item"><span class="item-name">Diamond Block</span><span class="item-price p5">💰 1800</span></div>
+<div class="item"><span class="item-name">Emerald Block</span><span class="item-price p5">💰 2250</span></div>
+<div class="item"><span class="item-name">Gold Block</span><span class="item-price p4">💰 945</span></div>
+<div class="item"><span class="item-name">Iron Block</span><span class="item-price p3">💰 198</span></div>
+<div class="item"><span class="item-name">Lapis Block</span><span class="item-price p3">💰 90</span></div>
+<div class="item"><span class="item-name">Netherite Block</span><span class="item-price p5">💰 11700</span></div>
+<div class="item"><span class="item-name">Quartz Block</span><span class="item-price p3">💰 90</span></div>
+<div class="item"><span class="item-name">Redstone Block</span><span class="item-price p4">💰 270</span></div>
+<div class="item"><span class="item-name">Smooth Quartz</span><span class="item-price p3">💰 95</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">🔥 Nether Items</div>
+<div class="grid">
+<div class="item"><span class="item-name">Basalt</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Blackstone</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Blaze Rod</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Crying Obsidian</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Gilded Blackstone</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Glowstone</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Glowstone Dust</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Magma Block</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Nether Brick</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Nether Brick Fence</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Nether Bricks</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Nether Star</span><span class="item-price p5">💰 5000</span></div>
+<div class="item"><span class="item-name">Nether Wart</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Netherrack</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Red Nether Bricks</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Respawn Anchor</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">Shroomlight</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Soul Sand</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Soul Soil</span><span class="item-price p1">💰 5</span></div>
+</div>
+<div class="category-title">🌌 End Items</div>
+<div class="grid">
+<div class="item"><span class="item-name">Bone Block</span><span class="item-price p2">💰 18</span></div>
+<div class="item"><span class="item-name">Chorus Fruit</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Elytra</span><span class="item-price p5">💰 5000</span></div>
+<div class="item"><span class="item-name">End Crystal</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">End Rod</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">End Stone</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">End Stone Bricks</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Popped Chorus Fruit</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Purpur Block</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Purpur Pillar</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Shulker Shell</span><span class="item-price p4">💰 350</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">🌊 Ocean Items</div>
+<div class="grid">
+<div class="item"><span class="item-name">Conduit</span><span class="item-price p5">💰 2500</span></div>
+<div class="item"><span class="item-name">Coral</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Coral Block</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Coral Fan</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Dark Prismarine</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Dried Kelp</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Dried Kelp Block</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Heart of the Sea</span><span class="item-price p5">💰 1000</span></div>
+<div class="item"><span class="item-name">Kelp</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Nautilus Shell</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Prismarine</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Prismarine Bricks</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Prismarine Crystals</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Prismarine Shard</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Scute</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Sea Lantern</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Sea Pickle</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Seagrass</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Turtle Egg</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Wet Sponge</span><span class="item-price p2">💰 40</span></div>
+</div>
+<div class="category-title">🧟 Mob Drops</div>
+<div class="grid">
+<div class="item"><span class="item-name">Blaze Powder</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Bone</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Creeper Head</span><span class="item-price p4">💰 200</span></div>
+<div class="item"><span class="item-name">Dragon Breath</span><span class="item-price p4">💰 200</span></div>
+<div class="item"><span class="item-name">Egg</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Ender Eye</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Ender Pearl</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Feather</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Ghast Tear</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Glow Ink Sac</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Gunpowder</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Leather</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Magma Cream</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Phantom Membrane</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Pufferfish</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Rabbit Foot</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Rabbit Hide</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Rotten Flesh</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Skeleton Skull</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Slimeball</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Spider Eye</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">String</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Totem of Undying</span><span class="item-price p4">💰 800</span></div>
+<div class="item"><span class="item-name">Trident</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">Turtle Scute</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Wither Skeleton Skull</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">Zombie Head</span><span class="item-price p3">💰 80</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">🍎 Food & Crops</div>
+<div class="grid">
+<div class="item"><span class="item-name">Apple</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Baked Potato</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Beetroot</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Beetroot Soup</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Bread</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Cake</span><span class="item-price p3">💰 180</span></div>
+<div class="item"><span class="item-name">Carrot</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Cooked Beef</span><span class="item-price p2">💰 12</span></div>
+<div class="item"><span class="item-name">Cooked Chicken</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Cooked Cod</span><span class="item-price p1">💰 7</span></div>
+<div class="item"><span class="item-name">Cooked Mutton</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Cooked Porkchop</span><span class="item-price p1">💰 7</span></div>
+<div class="item"><span class="item-name">Cooked Rabbit</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Cooked Salmon</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Cookie</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Enchanted Golden Apple</span><span class="item-price p5">💰 2000</span></div>
+<div class="item"><span class="item-name">Glistering Melon Slice</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Glow Berries</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Golden Apple</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Golden Carrot</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Honey Bottle</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Honeycomb</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Melon Slice</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Mushroom Stew</span><span class="item-price p1">💰 4.5</span></div>
+<div class="item"><span class="item-name">Poisonous Potato</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Potato</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Pumpkin Pie</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Rabbit Stew</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Sugar</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Sugar Cane</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Sweet Berries</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Tropical Fish</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Wheat</span><span class="item-price p1">💰 9</span></div>
+</div>
+<div class="category-title">🌱 Seeds & Plants</div>
+<div class="grid">
+<div class="item"><span class="item-name">Bamboo</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Beetroot Seeds</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Brown Mushroom</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Cactus</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Crimson Fungus</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Lily Pad</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Melon Seeds</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Pitcher Pod</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Pumpkin Seeds</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Red Mushroom</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Torchflower Seeds</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Warped Fungus</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Wheat Seeds</span><span class="item-price p1">💰 2</span></div>
+</div>
+<div class="category-title">🌸 Flowers & Decorative Plants</div>
+<div class="grid">
+<div class="item"><span class="item-name">Allium</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Azalea</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Azure Bluet</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Blue Orchid</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Cornflower</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Dandelion</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Flowering Azalea</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Glow Lichen</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Lilac</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Lily of the Valley</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Moss Block</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Moss Carpet</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Orange Tulip</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Oxeye Daisy</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Peony</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Pink Tulip</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Pitcher Plant</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Poppy</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Red Tulip</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Rose Bush</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Spore Blossom</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Sunflower</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Torchflower</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Vine</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">White Tulip</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Wither Rose</span><span class="item-price p3">💰 50</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">🎨 Wool</div>
+<div class="grid">
+<div class="item"><span class="item-name">Black Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Blue Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Brown Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Cyan Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Gray Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Green Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Light Blue Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Light Gray Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Lime Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Magenta Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Orange Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Pink Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Purple Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Red Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">White Wool</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Yellow Wool</span><span class="item-price p2">💰 20</span></div>
+</div>
+<div class="category-title">🪑 Carpets</div>
+<div class="grid">
+<div class="item"><span class="item-name">Black Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Blue Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Brown Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Cyan Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Gray Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Green Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Light Blue Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Light Gray Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Lime Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Magenta Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Orange Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Pink Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Purple Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Red Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">White Carpet</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Yellow Carpet</span><span class="item-price p1">💰 8</span></div>
+</div>
+<div class="category-title">🎨 Dyes</div>
+<div class="grid">
+<div class="item"><span class="item-name">Black Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Blue Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Bone Meal</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Brown Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Cocoa Beans</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Cyan Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Gray Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Green Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Ink Sac</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Lapis Lazuli</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Light Blue Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Light Gray Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Lime Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Magenta Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Orange Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Pink Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Purple Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Red Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">White Dye</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Yellow Dye</span><span class="item-price p1">💰 5</span></div>
+</div>
+<div class="category-title">🏺 Terracotta</div>
+<div class="grid">
+<div class="item"><span class="item-name">Black Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Blue Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Brown Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Cyan Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Gray Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Green Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Light Blue Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Light Gray Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Lime Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Magenta Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Orange Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Pink Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Purple Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Red Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">White Terracotta</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Yellow Terracotta</span><span class="item-price p1">💰 4</span></div>
+</div>
+<div class="category-title">🧱 Concrete</div>
+<div class="grid">
+<div class="item"><span class="item-name">Black Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Blue Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Brown Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Cyan Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Gray Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Green Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Light Blue Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Light Gray Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Lime Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Magenta Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Orange Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Pink Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Purple Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Red Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">White Concrete</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Yellow Concrete</span><span class="item-price p1">💰 5</span></div>
+</div>
+<div class="category-title">🪟 Stained Glass</div>
+<div class="grid">
+<div class="item"><span class="item-name">Black Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Blue Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Brown Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Cyan Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Glass</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Glass Pane</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Gray Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Green Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Light Blue Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Light Gray Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Lime Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Magenta Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Orange Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Pink Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Purple Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Red Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">White Stained Glass</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Yellow Stained Glass</span><span class="item-price p1">💰 5</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">🛠️ Tools & Misc</div>
+<div class="grid">
+<div class="item"><span class="item-name">Book</span><span class="item-price p2">💰 45</span></div>
+<div class="item"><span class="item-name">Bookshelf</span><span class="item-price p3">💰 140</span></div>
+<div class="item"><span class="item-name">Brush</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Bucket</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Clock</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Compass</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Fishing Rod</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Flint and Steel</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Lead</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Map</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Name Tag</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Obsidian</span><span class="item-price p3">💰 130</span></div>
+<div class="item"><span class="item-name">Paper</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Saddle</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Shears</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Spyglass</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Stick</span><span class="item-price p1">💰 0.25</span></div>
+<div class="item"><span class="item-name">TNT</span><span class="item-price p3">💰 100</span></div>
+</div>
+<div class="category-title">🪣 Buckets</div>
+<div class="grid">
+<div class="item"><span class="item-name">Lava Bucket</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Milk Bucket</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Powder Snow Bucket</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Water Bucket</span><span class="item-price p2">💰 40</span></div>
+</div>
+<div class="category-title">🚂 Minecarts & Rails</div>
+<div class="grid">
+<div class="item"><span class="item-name">Activator Rail</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Chest Minecart</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Detector Rail</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Furnace Minecart</span><span class="item-price p2">💰 32</span></div>
+<div class="item"><span class="item-name">Hopper Minecart</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Minecart</span><span class="item-price p2">💰 23</span></div>
+<div class="item"><span class="item-name">Powered Rail</span><span class="item-price p3">💰 60</span></div>
+<div class="item"><span class="item-name">Rails</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">TNT Minecart</span><span class="item-price p3">💰 80</span></div>
+</div>
+<div class="category-title">🛶 Boats</div>
+<div class="grid">
+<div class="item"><span class="item-name">Acacia Boat</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Birch Boat</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Cherry Boat</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Dark Oak Boat</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Jungle Boat</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Mangrove Boat</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Oak Boat</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Spruce Boat</span><span class="item-price p1">💰 3</span></div>
+</div>
+<div class="category-title">🏠 Decoration</div>
+<div class="grid">
+<div class="item"><span class="item-name">Armor Stand</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Bed</span><span class="item-price p3">💰 68</span></div>
+<div class="item"><span class="item-name">Blue Ice</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Bowl</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Candle</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Chest</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Cobblestone Stairs</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Ender Chest</span><span class="item-price p4">💰 300</span></div>
+<div class="item"><span class="item-name">Flower Pot</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Glow Item Frame</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Honeycomb Block</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Ice</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Item Frame</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Ladder</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Lantern</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Melon</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Oak Fence</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Oak Sign</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Oak Slab</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Oak Stairs</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Packed Ice</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Painting</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Pumpkin</span><span class="item-price p1">💰 8</span></div>
+<div class="item"><span class="item-name">Scaffolding</span><span class="item-price p1">💰 0.5</span></div>
+<div class="item"><span class="item-name">Shulker Box</span><span class="item-price p4">💰 700</span></div>
+<div class="item"><span class="item-name">Snow Block</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Snowball</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Soul Lantern</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Soul Torch</span><span class="item-price p1">💰 5</span></div>
+<div class="item"><span class="item-name">Sponge</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Stone Slab</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Torch</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Trapped Chest</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Wall Sign</span><span class="item-price p1">💰 1</span></div>
+</div>
+<div class="category-title">⚡ Redstone</div>
+<div class="grid">
+<div class="item"><span class="item-name">Comparator</span><span class="item-price p3">💰 60</span></div>
+<div class="item"><span class="item-name">Daylight Detector</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Dispenser</span><span class="item-price p3">💰 58</span></div>
+<div class="item"><span class="item-name">Dropper</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Hopper</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Lever</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Note Block</span><span class="item-price p2">💰 36</span></div>
+<div class="item"><span class="item-name">Oak Button</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Observer</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Piston</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Pressure Plate</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Redstone</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Redstone Torch</span><span class="item-price p2">💰 32</span></div>
+<div class="item"><span class="item-name">Repeater</span><span class="item-price p3">💰 110</span></div>
+<div class="item"><span class="item-name">Sticky Piston</span><span class="item-price p2">💰 25</span></div>
+<div class="item"><span class="item-name">Stone Button</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Target</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Tripwire Hook</span><span class="item-price p1">💰 5</span></div>
+</div>
+<div class="category-title">🔨 Workstations</div>
+<div class="grid">
+<div class="item"><span class="item-name">Anvil</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Beacon</span><span class="item-price p5">💰 8000</span></div>
+<div class="item"><span class="item-name">Bell</span><span class="item-price p4">💰 200</span></div>
+<div class="item"><span class="item-name">Blast Furnace</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Brewing Stand</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Cartography Table</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Cauldron</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Composter</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Crafting Table</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Enchanting Table</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">Fletching Table</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Furnace</span><span class="item-price p1">💰 8.5</span></div>
+<div class="item"><span class="item-name">Grindstone</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Jukebox</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Lectern</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Loom</span><span class="item-price p2">💰 10</span></div>
+<div class="item"><span class="item-name">Smithing Table</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Smoker</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Stonecutter</span><span class="item-price p2">💰 15</span></div>
+</div>
+<div class="category-title">🧪 Brewing</div>
+<div class="grid">
+<div class="item"><span class="item-name">Fermented Spider Eye</span><span class="item-price p2">💰 20</span></div>
+<div class="item"><span class="item-name">Glass Bottle</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Water Bottle</span><span class="item-price p1">💰 3</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">⚔️ Wooden & Stone Gear</div>
+<div class="grid">
+<div class="item"><span class="item-name">Stone Axe</span><span class="item-price p1">💰 3</span></div>
+<div class="item"><span class="item-name">Stone Hoe</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Stone Pickaxe</span><span class="item-price p1">💰 4</span></div>
+<div class="item"><span class="item-name">Stone Shovel</span><span class="item-price p1">💰 1.5</span></div>
+<div class="item"><span class="item-name">Stone Sword</span><span class="item-price p1">💰 2.5</span></div>
+<div class="item"><span class="item-name">Wooden Axe</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Wooden Hoe</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Wooden Pickaxe</span><span class="item-price p1">💰 2</span></div>
+<div class="item"><span class="item-name">Wooden Shovel</span><span class="item-price p1">💰 1</span></div>
+<div class="item"><span class="item-name">Wooden Sword</span><span class="item-price p1">💰 1</span></div>
+</div>
+<div class="category-title">⚔️ Iron & Gold Gear</div>
+<div class="grid">
+<div class="item"><span class="item-name">Golden Axe</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Golden Boots</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Golden Chestplate</span><span class="item-price p1">💰 6.5</span></div>
+<div class="item"><span class="item-name">Golden Helmet</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Golden Hoe</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Golden Leggings</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Golden Pickaxe</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Golden Shovel</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Golden Sword</span><span class="item-price p1">💰 6</span></div>
+<div class="item"><span class="item-name">Iron Axe</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Boots</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Chestplate</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Helmet</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Hoe</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Leggings</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Pickaxe</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Shovel</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Iron Sword</span><span class="item-price p2">💰 22</span></div>
+<div class="item"><span class="item-name">Shield</span><span class="item-price p2">💰 30</span></div>
+</div>
+<div class="category-title">🛡️ Chainmail & Leather Armor</div>
+<div class="grid">
+<div class="item"><span class="item-name">Chainmail Boots</span><span class="item-price p2">💰 30</span></div>
+<div class="item"><span class="item-name">Chainmail Chestplate</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Chainmail Helmet</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Chainmail Leggings</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Leather Boots</span><span class="item-price p2">💰 42</span></div>
+<div class="item"><span class="item-name">Leather Chestplate</span><span class="item-price p3">💰 85</span></div>
+<div class="item"><span class="item-name">Leather Helmet</span><span class="item-price p3">💰 52</span></div>
+<div class="item"><span class="item-name">Leather Leggings</span><span class="item-price p3">💰 75</span></div>
+</div>
+<div class="category-title">💎 Diamond Gear</div>
+<div class="grid">
+<div class="item"><span class="item-name">Diamond Axe</span><span class="item-price p4">💰 650</span></div>
+<div class="item"><span class="item-name">Diamond Boots</span><span class="item-price p4">💰 850</span></div>
+<div class="item"><span class="item-name">Diamond Chestplate</span><span class="item-price p5">💰 1750</span></div>
+<div class="item"><span class="item-name">Diamond Helmet</span><span class="item-price p5">💰 1000</span></div>
+<div class="item"><span class="item-name">Diamond Hoe</span><span class="item-price p4">💰 400</span></div>
+<div class="item"><span class="item-name">Diamond Leggings</span><span class="item-price p5">💰 1500</span></div>
+<div class="item"><span class="item-name">Diamond Pickaxe</span><span class="item-price p4">💰 650</span></div>
+<div class="item"><span class="item-name">Diamond Shovel</span><span class="item-price p4">💰 210</span></div>
+<div class="item"><span class="item-name">Diamond Sword</span><span class="item-price p4">💰 420</span></div>
+</div>
+<div class="category-title">🔱 Netherite Gear</div>
+<div class="grid">
+<div class="item"><span class="item-name">Netherite Axe</span><span class="item-price p5">💰 3500</span></div>
+<div class="item"><span class="item-name">Netherite Boots</span><span class="item-price p5">💰 3500</span></div>
+<div class="item"><span class="item-name">Netherite Chestplate</span><span class="item-price p5">💰 5500</span></div>
+<div class="item"><span class="item-name">Netherite Helmet</span><span class="item-price p5">💰 4000</span></div>
+<div class="item"><span class="item-name">Netherite Hoe</span><span class="item-price p5">💰 2500</span></div>
+<div class="item"><span class="item-name">Netherite Leggings</span><span class="item-price p5">💰 5000</span></div>
+<div class="item"><span class="item-name">Netherite Pickaxe</span><span class="item-price p5">💰 3500</span></div>
+<div class="item"><span class="item-name">Netherite Shovel</span><span class="item-price p5">💰 1800</span></div>
+<div class="item"><span class="item-name">Netherite Sword</span><span class="item-price p5">💰 2800</span></div>
+</div>
+<div class="category-title">🏹 Ranged & Horse</div>
+<div class="grid">
+<div class="item"><span class="item-name">Arrow</span><span class="item-price p1">💰 3.5</span></div>
+<div class="item"><span class="item-name">Bow</span><span class="item-price p2">💰 15</span></div>
+<div class="item"><span class="item-name">Crossbow</span><span class="item-price p2">💰 40</span></div>
+<div class="item"><span class="item-name">Diamond Horse Armor</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">Golden Horse Armor</span><span class="item-price p3">💰 80</span></div>
+<div class="item"><span class="item-name">Iron Horse Armor</span><span class="item-price p3">💰 100</span></div>
+<div class="item"><span class="item-name">Leather Horse Armor</span><span class="item-price p3">💰 50</span></div>
+<div class="item"><span class="item-name">Spectral Arrow</span><span class="item-price p1">💰 5</span></div>
+</div>
+</div>
+<div class="section-block">
+<div class="category-title">🎵 Music Discs</div>
+<div class="grid">
+<div class="item"><span class="item-name">Music Disc 11</span><span class="item-price p4">💰 300</span></div>
+<div class="item"><span class="item-name">Music Disc 13</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc 5</span><span class="item-price p4">💰 500</span></div>
+<div class="item"><span class="item-name">Music Disc Blocks</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Cat</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Chirp</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Far</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Mall</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Mellohi</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Otherside</span><span class="item-price p4">💰 300</span></div>
+<div class="item"><span class="item-name">Music Disc Pigstep</span><span class="item-price p4">💰 400</span></div>
+<div class="item"><span class="item-name">Music Disc Relic</span><span class="item-price p4">💰 400</span></div>
+<div class="item"><span class="item-name">Music Disc Stal</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Strad</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Wait</span><span class="item-price p3">💰 150</span></div>
+<div class="item"><span class="item-name">Music Disc Ward</span><span class="item-price p3">💰 150</span></div>
+</div>
+</div>
+
+<div class="discord-msg" style="text-align:center; margin-top:20px;">
+  <div style="font-size:12px; color:#b5bac1; margin-bottom:8px;">💡 <strong>Price Color Guide</strong></div>
+  <span class="p1" style="font-weight:700; margin:0 8px;">● Common (&lt;10)</span>
+  <span class="p2" style="font-weight:700; margin:0 8px;">● Uncommon (10–49)</span>
+  <span class="p3" style="font-weight:700; margin:0 8px;">● Rare (50–199)</span>
+  <span class="p4" style="font-weight:700; margin:0 8px;">● Epic (200–999)</span>
+  <span class="p5" style="font-weight:700; margin:0 8px;">● Legendary (1000+)</span>
+</div>
+<div class="footer">⚠️ Prices subject to change &nbsp;|&nbsp; Contact an admin for bulk orders &nbsp;|&nbsp; All prices per item</div>
+</div></body></html>
