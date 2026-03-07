@@ -988,3 +988,16 @@ mark {
   color: #a8e8b8;
   letter-spacing: 0.5px;
 }
+
+/* STICKY FOOTER */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+.main {
+  padding-bottom: 120px;
+}
