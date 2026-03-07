@@ -367,14 +367,8 @@
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   // ── FIREBASE INIT ────────────────────────────────────────────
-  const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyCFfSDOlztGJ3qeGOWdqHZSOFK9H5-2y-I",
-    authDomain: "mcnibro.firebaseapp.com",
-    projectId: "mcnibro",
-    storageBucket: "mcnibro.firebasestorage.app",
-    messagingSenderId: "1042312404090",
-    appId: "1:1042312404090:web:d51bd1933fd3508f64efc3"
-  };
+  import { getAppConfig } from "./js/utils.js";
+  const FIREBASE_CONFIG = getAppConfig();
   const fbApp = initializeApp(FIREBASE_CONFIG);
   const auth = getAuth(fbApp);
   const db = getFirestore(fbApp);

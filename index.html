@@ -130,7 +130,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
       import { getFirestore, collection, getDocs, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-      import { getAppConfig } from "js/utils.js";
+      import { getAppConfig } from "./js/utils.js";
       
       const FIREBASE_CONFIG = getAppConfig();
       const app = initializeApp(FIREBASE_CONFIG);
