@@ -374,15 +374,20 @@ document.addEventListener('keydown', e => {
 
 const footer = document.querySelector('.footer');
 function handleFooterVisibility() {
-    const pageScrollable = document.body.scrollHeight > window.innerHeight;
-    const scrolledToBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 60;
-    const show = !pageScrollable || scrolledToBottom;
-    footer.style.opacity = show ? '1' : '0';
-    footer.style.pointerEvents = show ? 'auto' : 'none';
-    footer.style.transform = show ? 'translateY(0)' : 'translateY(100%)';
+    const pageScrollable = document.body.scrollHeight > window.innerHeight + 10;
+    if (!pageScrollable) {
+        footer.style.transform = 'translateY(0)';
+        footer.style.opacity = '1';
+    } else {
+        const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+        footer.style.transform = atBottom ? 'translateY(0)' : 'translateY(100%)';
+        footer.style.opacity = atBottom ? '1' : '0';
+    }
 }
 window.addEventListener('scroll', handleFooterVisibility);
 window.addEventListener('resize', handleFooterVisibility);
+const observer = new MutationObserver(handleFooterVisibility);
+observer.observe(document.getElementById('main'), { childList: true, subtree: true });
 handleFooterVisibility();
 
 init();

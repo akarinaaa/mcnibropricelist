@@ -333,7 +333,7 @@ input[type=number]:focus {
 .main { 
     max-width: 1200px; 
     margin: 0 auto; 
-    padding: 0 20px 80px; 
+    padding: 0 20px 100px; 
 }
 
 /* SECTION */
@@ -958,10 +958,10 @@ mark {
   z-index: 99;
   background: linear-gradient(135deg, #1a4a20 0%, #2d6e20 50%, #1a3a10 100%);
   border-top: 2px solid var(--border);
-  margin-top: 40px;
-  padding: 28px 20px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  padding: 18px 20px;
   transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
 .footer-inner {
@@ -994,17 +994,4 @@ mark {
   font-size: 7px;
   color: #a8e8b8;
   letter-spacing: 0.5px;
-}
-
-/* STICKY FOOTER */
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 99;
-}
-
-.main {
-  padding-bottom: 120px;
 }
