@@ -51,16 +51,20 @@
         <button class="copy-btn" id="copyBtn">COPY</button>
       </div>
       <div class="header-stats" style="flex-shrink:0;">
-        <div class="stat-pill">Items: <span id="totalCount">0</span></div>
+        <div class="stat-pill">Items: <span id="totalCount">…</span></div>
         <div class="stat-pill">Compare: <span id="compareCountHeader">0</span>/8</div>
       </div>
-    </div>
     </div>
 
     <br>
 
+    <!-- LOADING STATE -->
+    <div id="loadingState" style="text-align:center;padding:60px 20px;font-family:'Press Start 2P',monospace;font-size:9px;color:#6b7c3a;line-height:2.5;">
+      ⏳ Loading items from database…
+    </div>
+
     <!-- CATEGORY TABS -->
-    <div class="tabs-wrap">
+    <div class="tabs-wrap" id="tabsWrap" style="display:none">
       <div class="tabs" id="tabs"></div>
     </div>
 
@@ -71,7 +75,7 @@
     </div>
 
     <!-- LEGEND -->
-    <div class="legend">
+    <div class="legend" id="legendWrap" style="display:none">
       <div class="legend-inner">
         <span style="color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px">Price Tier:</span>
         <span class="legend-item"><span class="dot" style="background:var(--p1)"></span><span class="p1">&lt; 10</span> Common</span>
@@ -122,23 +126,431 @@
       </div>
     </footer>
 
-    <script src="js/broscript.js"></script>
-    <script>
+    <!-- Firebase SDKs (CDN) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import { getFirestore, collection, getDocs, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCFfSDOlztGJ3qeGOWdqHZSOFK9H5-2y-I",
+        authDomain: "mcnibro.firebaseapp.com",
+        projectId: "mcnibro",
+        storageBucket: "mcnibro.firebasestorage.app",
+        messagingSenderId: "1042312404090",
+        appId: "1:1042312404090:web:d51bd1933fd3508f64efc3"
+      };
+
+      const app = initializeApp(FIREBASE_CONFIG);
+      const db = getFirestore(app);
+
+      // ── CAT CONFIG ──────────────────────────────────────────────
+      const CAT_EMOJI = {
+        "Logs":"🪵","Stripped Logs":"🪵","Planks":"🪚","Leaves & Saplings":"🍃",
+        "Stone & Earth":"⛏️","Deepslate":"🪨","Bricks":"🧱","Tuff":"🪨",
+        "Ores":"💎","Materials":"⚗️","Material Blocks":"📦",
+        "Copper Variants":"🟤","Nether":"🔥","The End":"🌌",
+        "Ocean":"🌊","Swamp":"🐸","Sculk":"🔊",
+        "Trial Chambers":"⚗️","Armor Trims":"✨","Pottery Sherds":"🏺",
+        "Armadillo":"🛡️","Sniffer":"🦕",
+        "Pale Garden":"🌿","Resin":"🟠",
+        "Mob Drops":"💀","Food":"🍎","Plants":"🌱",
+        "Wool & Fabric":"🧶","Dyes":"🎨","Terracotta":"🏺","Concrete":"🧱",
+        "Glass":"🪟","Misc":"🛠️","Transport":"🚂","Decoration":"🏠",
+        "Redstone":"⚡","Workstations":"🔨","Brewing":"🧪","Gear":"⚔️",
+        "Music Discs":"🎵"
+      };
+
+      const CAT_ORDER_DEFAULT = [
+        "Logs","Stripped Logs","Planks","Leaves & Saplings",
+        "Stone & Earth","Deepslate","Bricks","Tuff","Ores","Materials","Material Blocks",
+        "Copper Variants","Nether","The End","Ocean","Swamp","Sculk",
+        "Trial Chambers","Armor Trims","Pottery Sherds","Armadillo","Sniffer",
+        "Pale Garden","Resin","Mob Drops","Food","Plants",
+        "Wool & Fabric","Dyes","Terracotta","Concrete","Glass",
+        "Misc","Transport","Decoration","Redstone","Workstations","Brewing","Gear","Music Discs"
+      ];
+
+      // ── STATE ────────────────────────────────────────────────────
+      let ITEMS = [];
+      let CAT_ORDER = [...CAT_ORDER_DEFAULT];
+      let globalSort = null;
+      let activeCategory = 'All';
+      let compareList = [];
+      let sectionSorts = {};
+
+      // ── LOAD FROM FIRESTORE ──────────────────────────────────────
+      async function loadItems() {
+        try {
+          // Try loading category order from Firestore
+          try {
+            const catSnap = await getDocs(collection(db, "categories"));
+            if (!catSnap.empty) {
+              const cats = [];
+              catSnap.forEach(doc => cats.push(doc.data()));
+              cats.sort((a,b) => (a.order||0)-(b.order||0));
+              if (cats.length > 0) CAT_ORDER = cats.map(c => c.name);
+            }
+          } catch(e) { /* use default order */ }
+
+          // Load items
+          const snap = await getDocs(collection(db, "items"));
+          ITEMS = [];
+          snap.forEach(doc => {
+            const d = doc.data();
+            ITEMS.push({ id: doc.id, name: d.name, price: d.price, cat: d.cat });
+          });
+
+          if (ITEMS.length === 0) {
+            document.getElementById('loadingState').innerHTML =
+              '📭 No items in database yet.<br><br><a href="admin.html" style="color:var(--accent)">Open Admin Panel to add items</a>';
+            return;
+          }
+
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('tabsWrap').style.display = '';
+          document.getElementById('legendWrap').style.display = '';
+
+          document.getElementById('totalCount').textContent = ITEMS.length;
+          buildTabs();
+          applyFilters();
+
+        } catch(err) {
+          document.getElementById('loadingState').innerHTML =
+            '❌ Failed to load items.<br><br>' + err.message;
+          console.error(err);
+        }
+      }
+
+      // ── HELPERS ──────────────────────────────────────────────────
+      function pc(p) {
+        if (p < 10) return 'p1'; if (p < 50) return 'p2';
+        if (p < 200) return 'p3'; if (p < 1000) return 'p4'; return 'p5';
+      }
+      function fmt(p) { return p === Math.floor(p) ? p.toString() : p.toString(); }
+      function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      function hl(text, q) {
+        if (!q) return esc(text);
+        const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')','gi');
+        return esc(text).replace(re,'<mark>$1</mark>');
+      }
+
+      // ── TABS ─────────────────────────────────────────────────────
+      function buildTabs() {
+        const tabs = document.getElementById('tabs');
+        const usedCats = [...new Set(ITEMS.map(i => i.cat))];
+        const orderedCats = CAT_ORDER.filter(c => usedCats.includes(c));
+        const extraCats = usedCats.filter(c => !CAT_ORDER.includes(c));
+        const allCats = [...orderedCats, ...extraCats];
+        tabs.innerHTML = ['All', ...allCats].map(c =>
+          `<div class="tab${c===activeCategory?' active':''}" onclick="window.setCategory('${c.replace(/'/g,"\\'")}')">
+            ${c==='All'?'🏪 All':((CAT_EMOJI[c]||'')+'  '+esc(c))}
+          </div>`
+        ).join('');
+      }
+
+      window.setCategory = function(cat) {
+        activeCategory = cat;
+        buildTabs();
+        applyFilters();
+      };
+
+      // ── SORT ─────────────────────────────────────────────────────
+      window.setGlobalSort = function(type) {
+        globalSort = globalSort === type ? null : type;
+        document.querySelectorAll('#sortAsc,#sortDesc,#sortAZ').forEach(b => b.classList.remove('active'));
+        if (globalSort) {
+          const map = {asc:'sortAsc',desc:'sortDesc',az:'sortAZ'};
+          document.getElementById(map[globalSort]).classList.add('active');
+        }
+        applyFilters();
+      };
+
+      // ── FILTERS ──────────────────────────────────────────────────
+      window.applyFilters = function() {
+        const q = document.getElementById('searchInput').value.trim().toLowerCase();
+        const minV = parseFloat(document.getElementById('minPrice').value);
+        const maxV = parseFloat(document.getElementById('maxPrice').value);
+        const hasMin = !isNaN(minV), hasMax = !isNaN(maxV);
+        const hasFilters = q || hasMin || hasMax || globalSort || activeCategory !== 'All';
+
+        let filtered = ITEMS.filter(item => {
+          if (activeCategory !== 'All' && item.cat !== activeCategory) return false;
+          if (q && !item.name.toLowerCase().includes(q)) return false;
+          if (hasMin && item.price < minV) return false;
+          if (hasMax && item.price > maxV) return false;
+          return true;
+        });
+
+        document.getElementById('resultsBar').style.display = hasFilters ? 'flex' : 'none';
+        document.getElementById('resultCount').textContent = filtered.length;
+        document.getElementById('searchHint').textContent = q ? `Searching for "${q}"` : '';
+
+        if (globalSort) {
+          if (globalSort === 'asc') filtered.sort((a,b) => a.price - b.price);
+          else if (globalSort === 'desc') filtered.sort((a,b) => b.price - a.price);
+          else filtered.sort((a,b) => a.name.localeCompare(b.name));
+        }
+
+        renderAll(filtered, q);
+      };
+
+      // ── RENDER ───────────────────────────────────────────────────
+      function renderAll(items, q = '') {
+        const main = document.getElementById('main');
+        if (items.length === 0) {
+          main.innerHTML = '<div class="no-results">😔 No items found<br><br>Try a different search</div>';
+          return;
+        }
+
+        if (globalSort && activeCategory === 'All' &&
+            !document.getElementById('searchInput').value &&
+            !document.getElementById('minPrice').value &&
+            !document.getElementById('maxPrice').value) {
+          main.innerHTML = `<div class="section"><div class="grid">${items.map(item => renderItem(item, q, true)).join('')}</div></div>`;
+          return;
+        }
+
+        const usedCats = [...new Set(ITEMS.map(i => i.cat))];
+        const orderedCats = CAT_ORDER.filter(c => usedCats.includes(c));
+        const extraCats = usedCats.filter(c => !CAT_ORDER.includes(c));
+        const allCats = [...orderedCats, ...extraCats];
+
+        const groups = {};
+        allCats.forEach(c => { groups[c] = []; });
+        items.forEach(item => {
+          if (!groups[item.cat]) groups[item.cat] = [];
+          groups[item.cat].push(item);
+        });
+
+        let html = '';
+        allCats.forEach(cat => {
+          const catItems = groups[cat];
+          if (!catItems || catItems.length === 0) return;
+          html += renderSection(cat, catItems, q);
+        });
+        main.innerHTML = html || '<div class="no-results">😔 No items found</div>';
+        attachSortListeners();
+      }
+
+      function renderSection(cat, items, q) {
+        const sort = sectionSorts[cat];
+        let sorted = [...items];
+        if (sort === 'asc') sorted.sort((a,b) => a.price - b.price);
+        else if (sort === 'desc') sorted.sort((a,b) => b.price - a.price);
+        else sorted.sort((a,b) => a.name.localeCompare(b.name));
+
+        const em = CAT_EMOJI[cat] || '📦';
+        const catEsc = cat.replace(/"/g,'&quot;');
+        return `
+        <div class="section" id="sec-${cat.replace(/\s+/g,'-').replace(/[^a-zA-Z0-9-]/g,'')}">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="emoji">${em}</span> ${esc(cat)}
+              <span class="section-count">${items.length}</span>
+            </div>
+            <div class="section-line"></div>
+            <div class="section-sort">
+              <button class="ssort-btn${sort==='az'?' active':''}" data-cat="${catEsc}" data-type="az">A–Z</button>
+              <button class="ssort-btn${sort==='asc'?' active':''}" data-cat="${catEsc}" data-type="asc">💰↑</button>
+              <button class="ssort-btn${sort==='desc'?' active':''}" data-cat="${catEsc}" data-type="desc">💰↓</button>
+            </div>
+          </div>
+          <div class="grid">${sorted.map(item => renderItem(item, q)).join('')}</div>
+        </div>`;
+      }
+
+      function renderItem(item, q, showCat = false) {
+        const inCmp = compareList.some(c => c.name === item.name);
+        const nameHtml = hl(item.name, q);
+        const p = pc(item.price);
+        const safeN = item.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        const safeCat = item.cat.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        return `<div class="item${inCmp?' in-compare':''}" onclick="window.handleItemClick('${safeN}',${item.price},'${safeCat}')">
+          <button class="add-compare-btn" title="Add to compare">+</button>
+          <div class="item-name">${nameHtml}${showCat?`<span class="item-cat-tag">${esc(item.cat)}</span>`:''}</div>
+          <div class="item-right">
+            <span class="item-price ${p}">💰 ${fmt(item.price)}</span>
+          </div>
+        </div>`;
+      }
+
+      function attachSortListeners() {
+        document.querySelectorAll('.ssort-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            const cat = btn.dataset.cat;
+            const type = btn.dataset.type;
+            sectionSorts[cat] = sectionSorts[cat] === type ? null : type;
+            document.querySelectorAll(`.ssort-btn[data-cat="${CSS.escape(cat)}"]`).forEach(b => b.classList.remove('active'));
+            if (sectionSorts[cat]) btn.classList.add('active');
+            applyFilters();
+          });
+        });
+      }
+
+      // ── COMPARE ──────────────────────────────────────────────────
+      let compareModeOn = false;
+
+      window.toggleCompareMode = function() {
+        if (compareModeOn && compareList.length > 0) { openCompare(); return; }
+        compareModeOn = !compareModeOn;
+        document.body.classList.toggle('compare-mode', compareModeOn);
+        showToast(compareModeOn ? '⚡ Compare mode ON — click items!' : 'Compare mode OFF');
+      };
+
+      window.handleItemClick = function(name, price, cat) {
+        if (!compareModeOn) return;
+        toggleCompare(name, price, cat);
+      };
+
+      function toggleCompare(name, price, cat) {
+        const idx = compareList.findIndex(c => c.name === name);
+        if (idx >= 0) {
+          compareList.splice(idx, 1);
+          showToast(`Removed: ${name}`);
+        } else {
+          if (compareList.length >= 8) { showToast('⚠ Max 8 items!', 'red'); return; }
+          compareList.push({name, price, cat});
+          showToast(`Added: ${name}`);
+        }
+        updateCompareTray();
+        applyFilters();
+      }
+
+      function updateCompareTray() {
+        const tray = document.getElementById('compareTray');
+        const count = compareList.length;
+        document.getElementById('compareCount').textContent = count;
+        document.getElementById('compareCountHeader').textContent = count;
+        if (count === 0) { tray.classList.remove('open'); return; }
+        tray.classList.add('open');
+        document.getElementById('trayItems').innerHTML = compareList.map(item => `
+          <div class="tray-item">
+            ${esc(item.name)} <span class="tray-item-price">💰${fmt(item.price)}</span>
+            <button class="tray-remove" onclick="event.stopPropagation();window.removeTrayItem('${item.name.replace(/'/g,"\\'")}',${item.price},'${item.cat.replace(/'/g,"\\'")}')">✕</button>
+          </div>`).join('');
+      }
+
+      window.removeTrayItem = function(name, price, cat) { toggleCompare(name, price, cat); };
+
+      window.clearCompare = function() {
+        compareList = [];
+        updateCompareTray();
+        applyFilters();
+      };
+
+      window.openCompare = function() {
+        if (compareList.length === 0) { showToast('Add items first!'); return; }
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modalBody');
+        modal.classList.add('open');
+        const maxP = Math.max(...compareList.map(i=>i.price));
+        const minP = Math.min(...compareList.map(i=>i.price));
+        const avgP = compareList.reduce((s,i)=>s+i.price,0)/compareList.length;
+        const totP = compareList.reduce((s,i)=>s+i.price,0);
+        body.innerHTML = `
+          <div class="compare-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">
+            ${compareList.map(item => {
+              const isMax = item.price===maxP && compareList.filter(i=>i.price===maxP).length<compareList.length;
+              const isMin = item.price===minP && compareList.filter(i=>i.price===minP).length<compareList.length;
+              const barPct = maxP>0?Math.round((item.price/maxP)*100):100;
+              const barColor = item.price===maxP?'var(--red)':item.price===minP?'var(--accent)':'var(--accent2)';
+              return `<div class="compare-card${isMax?' highest':isMin?' lowest':''}">
+                <div>
+                  <div class="compare-card-name">${esc(item.name)}</div>
+                  <div class="compare-card-cat">${esc(item.cat)}</div>
+                  ${isMin?'<span class="compare-badge badge-cheapest">✓ Cheapest</span>':''}
+                  ${isMax?'<span class="compare-badge badge-priciest">⬆ Priciest</span>':''}
+                  <div class="compare-bar-wrap">
+                    <div class="compare-bar-label">Relative Price</div>
+                    <div class="compare-bar-track"><div class="compare-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="compare-price-big ${pc(item.price)}">💰${fmt(item.price)}</div>
+                  <div class="compare-price-label">per item</div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="compare-summary">
+            <div class="summary-stat"><div class="summary-val p1">💰${fmt(minP)}</div><div class="summary-lbl">Cheapest</div></div>
+            <div class="summary-stat"><div class="summary-val p4">💰${fmt(maxP)}</div><div class="summary-lbl">Priciest</div></div>
+            <div class="summary-stat"><div class="summary-val p2">💰${fmt(Math.round(avgP*100)/100)}</div><div class="summary-lbl">Average</div></div>
+            <div class="summary-stat"><div class="summary-val p3">💰${fmt(Math.round(totP*100)/100)}</div><div class="summary-lbl">Total (${compareList.length} items)</div></div>
+            <div class="summary-stat"><div class="summary-val" style="color:var(--accent2)">💰${fmt(Math.round((maxP-minP)*100)/100)}</div><div class="summary-lbl">Price Difference</div></div>
+          </div>`;
+      };
+
+      window.closeCompare = function() { document.getElementById('modal').classList.remove('open'); };
+
+      // ── MISC ─────────────────────────────────────────────────────
+      window.copyIP = function() {
+        navigator.clipboard.writeText('kuma.mcnibro.net').then(() => {
+          const btn = document.getElementById('copyBtn');
+          btn.textContent = 'COPIED!'; btn.classList.add('copied');
+          showToast('✅ IP Copied: kuma.mcnibro.net');
+          setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+        });
+      };
+
+      function showToast(msg, type) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast' + (type === 'red' ? ' toast-red' : '');
+        t.classList.add('show');
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.classList.remove('show'), 2000);
+      }
+
+      window.clearAll = function() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('minPrice').value = '';
+        document.getElementById('maxPrice').value = '';
+        globalSort = null; sectionSorts = {}; activeCategory = 'All';
+        compareModeOn = false; document.body.classList.remove('compare-mode');
+        document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        buildTabs(); applyFilters();
+      };
+
+      document.addEventListener('keydown', e => {
+        if ((e.key === '/' || e.key === 'f') && !e.target.matches('input')) {
+          e.preventDefault();
+          document.getElementById('searchInput').focus();
+        }
+        if (e.key === 'Escape') window.closeCompare();
+      });
+
+      const footer = document.querySelector('.footer');
+      function handleFooterVisibility() {
+        const pageScrollable = document.body.scrollHeight > window.innerHeight + 10;
+        if (!pageScrollable) { footer.style.transform='translateY(0)'; footer.style.opacity='1'; }
+        else {
+          const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+          footer.style.transform = atBottom ? 'translateY(0)' : 'translateY(100%)';
+          footer.style.opacity = atBottom ? '1' : '0';
+        }
+      }
+      window.addEventListener('scroll', handleFooterVisibility);
+      window.addEventListener('resize', handleFooterVisibility);
+      new MutationObserver(handleFooterVisibility).observe(document.getElementById('main'), {childList:true,subtree:true});
+      handleFooterVisibility();
+
       function updateTrayBounds() {
         const header = document.querySelector('.header');
-        const footer = document.querySelector('.footer');
         const tray = document.getElementById('compareTray');
         if (!tray) return;
         const hh = header ? header.offsetHeight : 80;
-        const footerVisible = footer && parseFloat(getComputedStyle(footer).opacity) > 0.05;
-        const fh = footerVisible ? footer.offsetHeight : 0;
         tray.style.top = hh + 'px';
-        tray.style.height = 'calc(100vh - ' + hh + 'px - ' + fh + 'px)';
+        tray.style.height = `calc(100vh - ${hh}px)`;
         document.documentElement.style.setProperty('--header-h', hh + 'px');
       }
       window.addEventListener('load', updateTrayBounds);
       window.addEventListener('resize', updateTrayBounds);
       setInterval(updateTrayBounds, 200);
+
+      // ── INIT ─────────────────────────────────────────────────────
+      loadItems();
     </script>
   </body>
 </html>

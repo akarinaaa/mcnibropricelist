@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCniBro — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f; --bg2: #111118; --bg3: #1a1a24; --border: #2a2a3a;
+      --accent: #00ffc3; --accent2: #ff6b35; --red: #ff4444; --yellow: #ffd700;
+      --text: #e8e8f0; --muted: #6b6b8a;
+      --p1: #7ec8e3; --p2: #a8e063; --p3: #ffd700; --p4: #ff9f43; --p5: #ff4757;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
+    body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; font-weight: 500; min-height: 100vh; }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .login-box {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-top: 3px solid var(--accent); padding: 40px;
+      width: 380px; border-radius: 4px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .login-logo { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--accent); margin-bottom: 6px; }
+    .login-sub { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--accent2); margin-bottom: 30px; }
+    .login-label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; margin-top: 16px; }
+    .login-input {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+      padding: 12px 14px; font-family: 'Rajdhani', sans-serif; font-size: 14px;
+      border-radius: 3px; outline: none; transition: border 0.15s;
+    }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn {
+      width: 100%; margin-top: 24px; background: var(--accent); color: #000;
+      border: none; padding: 13px; font-family: 'Press Start 2P', monospace;
+      font-size: 8px; cursor: pointer; border-radius: 3px; transition: all 0.15s;
+      letter-spacing: 1px;
+    }
+    .login-btn:hover { background: #00e6ae; }
+    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .login-error { color: var(--red); font-size: 12px; margin-top: 12px; min-height: 18px; text-align: center; }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--bg2); border-bottom: 2px solid var(--accent);
+      padding: 14px 24px; display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 4px 20px rgba(0,255,195,0.1); position: sticky; top: 0; z-index: 100;
+    }
+    .header-logo { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--accent); line-height: 1.6; }
+    .header-title { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--accent2); }
+    .header-sep { width: 1px; height: 40px; background: var(--border); }
+    .header-stats { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+    .stat-pill { background: var(--bg3); border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; font-size: 12px; color: var(--muted); }
+    .stat-pill span { color: var(--accent); font-weight: 700; }
+    .btn-export {
+      background: var(--accent); color: #000; font-family: 'Press Start 2P', monospace;
+      font-size: 7px; padding: 10px 16px; border: none; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 1px; transition: all 0.15s;
+      clip-path: polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+    }
+    .btn-export:hover { background: #00e6ae; transform: translateY(-1px); }
+    .btn-back {
+      background: transparent; color: var(--muted); border: 1px solid var(--border);
+      padding: 8px 14px; cursor: pointer; font-family: 'Rajdhani', sans-serif;
+      font-size: 13px; font-weight: 600; transition: all 0.15s; border-radius: 3px;
+    }
+    .btn-back:hover { color: var(--text); border-color: var(--text); }
+    .btn-logout {
+      background: transparent; color: var(--red); border: 1px solid var(--red);
+      padding: 8px 14px; cursor: pointer; font-family: 'Rajdhani', sans-serif;
+      font-size: 13px; font-weight: 600; transition: all 0.15s; border-radius: 3px;
+    }
+    .btn-logout:hover { background: rgba(255,68,68,0.1); }
+    .admin-user { font-size: 12px; color: var(--muted); }
+
+    /* ── LAYOUT ── */
+    .layout { display: flex; min-height: calc(100vh - 70px); }
+
+    /* ── SIDEBAR ── */
+    .sidebar { width: 260px; flex-shrink: 0; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .cat-list { overflow-y: auto; flex: 1; }
+    .cat-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.12s; font-size: 13px; font-weight: 600;
+    }
+    .cat-item:hover { background: var(--bg3); }
+    .cat-item.active { background: rgba(0,255,195,0.08); color: var(--accent); border-left: 2px solid var(--accent); }
+    .cat-count { background: var(--bg3); color: var(--muted); font-size: 11px; padding: 2px 7px; border-radius: 10px; min-width: 26px; text-align: center; }
+    .cat-item.active .cat-count { background: rgba(0,255,195,0.2); color: var(--accent); }
+    .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); }
+    .btn-add-cat { width: 100%; background: transparent; color: var(--accent2); border: 1px dashed var(--accent2); padding: 8px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; transition: all 0.15s; border-radius: 3px; }
+    .btn-add-cat:hover { background: rgba(255,107,53,0.1); }
+
+    /* ── CONTENT ── */
+    .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── TOOLBAR ── */
+    .toolbar { padding: 12px 20px; background: var(--bg2); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 320px; }
+    .search-wrap input { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 8px 12px 8px 34px; font-family: 'Rajdhani', sans-serif; font-size: 13px; border-radius: 4px; outline: none; transition: border 0.15s; }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .search-wrap .ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .toolbar-sep { width: 1px; height: 28px; background: var(--border); }
+    .btn-add { background: var(--accent2); color: #fff; border: none; padding: 8px 16px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; transition: all 0.15s; border-radius: 3px; white-space: nowrap; }
+    .btn-add:hover { background: #ff7f4d; }
+    .btn-sm { background: var(--bg3); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600; border-radius: 3px; transition: all 0.15s; }
+    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm.danger:hover { border-color: var(--red); color: var(--red); }
+    .sort-btn { background: var(--bg3); color: var(--muted); border: 1px solid var(--border); padding: 6px 10px; cursor: pointer; border-radius: 3px; font-size: 12px; transition: all 0.12s; font-family: 'Rajdhani', sans-serif; }
+    .sort-btn.active { border-color: var(--accent); color: var(--accent); }
+
+    /* ── TABLE ── */
+    .table-wrap { flex: 1; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { position: sticky; top: 0; z-index: 10; }
+    thead tr { background: var(--bg3); }
+    th { padding: 10px 14px; text-align: left; font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border); user-select: none; cursor: pointer; white-space: nowrap; }
+    th:hover { color: var(--text); }
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.1s; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody tr.editing { background: rgba(0,255,195,0.05); }
+    td { padding: 9px 14px; font-size: 14px; vertical-align: middle; }
+    td.td-name { font-weight: 600; max-width: 220px; }
+    td.td-price { width: 100px; }
+    td.td-cat { width: 160px; }
+    td.td-actions { width: 120px; text-align: right; }
+
+    .price-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-weight: 700; font-size: 13px; }
+    .p1{color:var(--p1)} .p2{color:var(--p2)} .p3{color:var(--p3)} .p4{color:var(--p4)} .p5{color:var(--p5)}
+
+    .inline-input { background: var(--bg); border: 1px solid var(--accent); color: var(--text); padding: 4px 8px; font-family: 'Rajdhani', sans-serif; font-size: 13px; border-radius: 3px; outline: none; }
+    .inline-input.name-input { width: 180px; }
+    .inline-input.price-input { width: 80px; }
+    .inline-select { background: var(--bg); border: 1px solid var(--accent); color: var(--text); padding: 4px 8px; font-family: 'Rajdhani', sans-serif; font-size: 12px; border-radius: 3px; outline: none; width: 140px; }
+    .action-btn { background: none; border: none; cursor: pointer; font-size: 14px; padding: 4px 6px; border-radius: 3px; transition: background 0.12s; opacity: 0.6; }
+    .action-btn:hover { opacity: 1; background: var(--bg3); }
+    .action-btn.confirm { color: var(--accent); }
+    .action-btn.cancel-btn { color: var(--muted); }
+    .action-btn.delete-btn:hover { background: rgba(255,68,68,0.15); color: var(--red); opacity: 1; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state .big { font-size: 48px; margin-bottom: 16px; }
+    .empty-state p { font-size: 15px; }
+
+    /* ── MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--bg2); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 28px; border-radius: 4px; min-width: 360px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+    .modal h2 { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--accent); margin-bottom: 20px; }
+    .modal label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; margin-top: 14px; }
+    .modal input, .modal select { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; font-family: 'Rajdhani', sans-serif; font-size: 14px; border-radius: 3px; outline: none; transition: border 0.15s; }
+    .modal input:focus, .modal select:focus { border-color: var(--accent); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; }
+    .btn-primary { background: var(--accent); color: #000; border: none; padding: 10px 20px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; border-radius: 3px; transition: all 0.15s; }
+    .btn-primary:hover { background: #00e6ae; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); padding: 10px 20px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 600; border-radius: 3px; transition: all 0.15s; }
+    .btn-secondary:hover { border-color: var(--muted); }
+    .confirm-dialog .modal { border-top-color: var(--red); }
+    .confirm-dialog h2 { color: var(--red); }
+    .confirm-dialog p { font-size: 14px; color: var(--muted); margin-top: 8px; }
+    .confirm-dialog strong { color: var(--text); }
+    .btn-danger-modal { background: var(--red); color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; border-radius: 3px; transition: all 0.15s; }
+    .btn-danger-modal:hover { background: #ff6666; }
+
+    /* ── SEED MODAL ── */
+    .seed-info { background: var(--bg3); border: 1px solid var(--border); border-radius: 3px; padding: 12px; font-size: 13px; color: var(--muted); margin-bottom: 6px; line-height: 1.6; }
+    .seed-info strong { color: var(--accent); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--bg3); border: 1px solid var(--accent); color: var(--accent); padding: 10px 18px; font-size: 13px; font-weight: 700; border-radius: 4px; z-index: 9999; transform: translateY(20px); opacity: 0; transition: all 0.25s; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-color: var(--red); color: var(--red); }
+    .toast.success { border-color: var(--accent); color: var(--accent); }
+
+    /* ── LOADING SPINNER ── */
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .saving-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 500; display: none; align-items: center; justify-content: center; }
+    .saving-overlay.show { display: flex; }
+    .saving-box { background: var(--bg2); border: 1px solid var(--accent); padding: 20px 32px; border-radius: 4px; font-size: 14px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    .row-new { animation: rowFadeIn 0.3s ease; }
+    @keyframes rowFadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">MCniBro</div>
+    <div class="login-sub">⚙ Admin Panel</div>
+    <label class="login-label">Email</label>
+    <input class="login-input" type="email" id="loginEmail" placeholder="admin@mcnibro.net" autocomplete="username">
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">▶ LOGIN</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- SAVING OVERLAY -->
+<div class="saving-overlay" id="savingOverlay">
+  <div class="saving-box"><div class="spinner"></div> Saving to database…</div>
+</div>
+
+<!-- MAIN APP (hidden until logged in) -->
+<div id="app" style="display:none">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-logo">MCniBro</div>
+      <div class="header-title">⚙ Admin Panel</div>
+    </div>
+    <div class="header-sep"></div>
+    <div class="header-stats">
+      <div class="stat-pill">Total Items: <span id="totalCount">0</span></div>
+      <div class="stat-pill">Categories: <span id="catCount">0</span></div>
+      <div class="stat-pill" id="filterStat" style="display:none">Filtered: <span id="filteredCount">0</span></div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+      <span class="admin-user" id="adminUserLabel"></span>
+      <button class="btn-back" onclick="window.location.href='index.html'">← Back to Site</button>
+      <button class="btn-export" onclick="openSeedModal()">⬆ Seed DB</button>
+      <button class="btn-logout" onclick="doLogout()">⏻ Logout</button>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">📂 Categories</div>
+      <div class="cat-list" id="catList"></div>
+      <div class="sidebar-footer">
+        <button class="btn-add-cat" onclick="openAddCat()">+ New Category</button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="ico">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search items..." oninput="renderTable()">
+        </div>
+        <div class="toolbar-sep"></div>
+        <button class="btn-add" onclick="openAddItem()">＋ Add Item</button>
+        <div class="toolbar-sep"></div>
+        <button class="sort-btn" id="sortName" onclick="setSort('name')">Name ↕</button>
+        <button class="sort-btn" id="sortPrice" onclick="setSort('price')">Price ↕</button>
+        <div class="toolbar-sep"></div>
+        <button class="btn-sm danger" onclick="confirmBulkDelete()">🗑 Delete Category</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="setSort('name')" id="thName">Item Name</th>
+              <th onclick="setSort('price')" id="thPrice">Price 💰</th>
+              <th>Category</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div id="emptyState" class="empty-state" style="display:none">
+          <div class="big">📭</div>
+          <p>No items found. Try a different search or add a new item.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT ITEM MODAL -->
+<div class="modal-overlay" id="itemModal" onclick="if(event.target===this)closeItemModal()">
+  <div class="modal">
+    <h2 id="modalTitle">ADD ITEM</h2>
+    <label>Item Name</label>
+    <input type="text" id="modalName" placeholder="e.g. Diamond Sword">
+    <label>Price 💰</label>
+    <input type="number" id="modalPrice" placeholder="e.g. 420" min="0" step="0.01">
+    <label>Category</label>
+    <select id="modalCat"></select>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeItemModal()">Cancel</button>
+      <button class="btn-primary" id="saveItemBtn" onclick="saveItem()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CATEGORY MODAL -->
+<div class="modal-overlay" id="catModal" onclick="if(event.target===this)closeCatModal()">
+  <div class="modal">
+    <h2>NEW CATEGORY</h2>
+    <label>Category Name</label>
+    <input type="text" id="catModalName" placeholder="e.g. Potions">
+    <label>Emoji (optional)</label>
+    <input type="text" id="catModalEmoji" placeholder="e.g. 🧪" maxlength="4">
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeCatModal()">Cancel</button>
+      <button class="btn-primary" id="saveCatBtn" onclick="saveCat()">Create Category</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div class="modal-overlay confirm-dialog" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
+  <div class="modal">
+    <h2>⚠ CONFIRM DELETE</h2>
+    <p id="confirmMsg">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-danger-modal" onclick="executeConfirm()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEED MODAL -->
+<div class="modal-overlay" id="seedModal" onclick="if(event.target===this)closeSeedModal()">
+  <div class="modal" style="max-width:500px">
+    <h2>⬆ SEED DATABASE</h2>
+    <div class="seed-info">
+      This will upload all <strong>~600 default items</strong> from the original price list into Firestore.<br><br>
+      ⚠ This will <strong>overwrite</strong> existing items with the same name. Use this to do a first-time setup or reset.
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSeedModal()">Cancel</button>
+      <button class="btn-primary" id="seedBtn" onclick="runSeed()">⬆ Upload All Items</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore, collection, doc,
+    getDocs, addDoc, setDoc, updateDoc, deleteDoc, writeBatch,
+    query, orderBy, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── FIREBASE INIT ────────────────────────────────────────────
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCFfSDOlztGJ3qeGOWdqHZSOFK9H5-2y-I",
+    authDomain: "mcnibro.firebaseapp.com",
+    projectId: "mcnibro",
+    storageBucket: "mcnibro.firebasestorage.app",
+    messagingSenderId: "1042312404090",
+    appId: "1:1042312404090:web:d51bd1933fd3508f64efc3"
+  };
+  const fbApp = initializeApp(FIREBASE_CONFIG);
+  const auth = getAuth(fbApp);
+  const db = getFirestore(fbApp);
+
+  // ── STATE ────────────────────────────────────────────────────
+  let items = [];
+  let activeCategory = 'All';
+  let sortField = 'name';
+  let sortDirs = { name: 1, price: 1 };
+  let editingId = null;
+  let confirmCallback = null;
+  let modalEditId = null;
+
+  const CAT_EMOJI = {
+    "Logs":"🪵","Stripped Logs":"🪵","Planks":"🪚","Leaves & Saplings":"🍃",
+    "Stone & Earth":"⛏️","Deepslate":"🪨","Bricks":"🧱","Tuff":"🪨",
+    "Ores":"💎","Materials":"⚗️","Material Blocks":"📦",
+    "Copper Variants":"🟤","Nether":"🔥","The End":"🌌",
+    "Ocean":"🌊","Swamp":"🐸","Sculk":"🔊",
+    "Trial Chambers":"⚗️","Armor Trims":"✨","Pottery Sherds":"🏺",
+    "Armadillo":"🛡️","Sniffer":"🦕",
+    "Pale Garden":"🌿","Resin":"🟠",
+    "Mob Drops":"💀","Food":"🍎","Plants":"🌱",
+    "Wool & Fabric":"🧶","Dyes":"🎨","Terracotta":"🏺","Concrete":"🧱",
+    "Glass":"🪟","Misc":"🛠️","Transport":"🚂","Decoration":"🏠",
+    "Redstone":"⚡","Workstations":"🔨","Brewing":"🧪","Gear":"⚔️",
+    "Music Discs":"🎵"
+  };
+
+  const CAT_ORDER_DEFAULT = [
+    "Logs","Stripped Logs","Planks","Leaves & Saplings",
+    "Stone & Earth","Deepslate","Bricks","Tuff","Ores","Materials","Material Blocks",
+    "Copper Variants","Nether","The End","Ocean","Swamp","Sculk",
+    "Trial Chambers","Armor Trims","Pottery Sherds","Armadillo","Sniffer",
+    "Pale Garden","Resin","Mob Drops","Food","Plants",
+    "Wool & Fabric","Dyes","Terracotta","Concrete","Glass",
+    "Misc","Transport","Decoration","Redstone","Workstations","Brewing","Gear","Music Discs"
+  ];
+
+  // ── AUTH ─────────────────────────────────────────────────────
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').style.display = '';
+      document.getElementById('adminUserLabel').textContent = '👤 ' + user.email;
+      loadItems();
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+    }
+  });
+
+  window.doLogin = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+    const errEl = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+    errEl.textContent = '';
+    if (!email || !pass) { errEl.textContent = 'Please fill in all fields.'; return; }
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+      errEl.textContent = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password'
+        ? 'Wrong email or password.'
+        : e.code === 'auth/user-not-found'
+        ? 'No account found with that email.'
+        : e.code === 'auth/too-many-requests'
+        ? 'Too many attempts. Try again later.'
+        : e.message;
+      btn.disabled = false;
+      btn.textContent = '▶ LOGIN';
+    }
+  };
+
+  window.doLogout = async function() {
+    await signOut(auth);
+  };
+
+  // ── LOAD FROM FIRESTORE ──────────────────────────────────────
+  async function loadItems() {
+    try {
+      const snap = await getDocs(collection(db, "items"));
+      items = [];
+      snap.forEach(doc => {
+        const d = doc.data();
+        items.push({ id: doc.id, name: d.name, price: d.price, cat: d.cat });
+      });
+      renderSidebar();
+      renderTable();
+      updateStats();
+    } catch(e) {
+      showToast('Failed to load: ' + e.message, 'error');
+    }
+  }
+
+  // ── HELPERS ──────────────────────────────────────────────────
+  function pc(p) {
+    if (p < 10) return 'p1'; if (p < 50) return 'p2';
+    if (p < 200) return 'p3'; if (p < 1000) return 'p4'; return 'p5';
+  }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function getCategories() {
+    const fromItems = [...new Set(items.map(i => i.cat))];
+    const all = [...new Set([...CAT_ORDER_DEFAULT, ...fromItems])];
+    return all.filter(c => fromItems.includes(c) || CAT_ORDER_DEFAULT.includes(c));
+  }
+
+  function updateStats() {
+    document.getElementById('totalCount').textContent = items.length;
+    document.getElementById('catCount').textContent = getCategories().filter(c => items.some(i=>i.cat===c)).length;
+  }
+
+  // ── SIDEBAR ──────────────────────────────────────────────────
+  function renderSidebar() {
+    const list = document.getElementById('catList');
+    const cats = getCategories().filter(c => items.some(i => i.cat === c));
+    list.innerHTML = `<div class="cat-item${activeCategory==='All'?' active':''}" onclick="window.selectCat('All')">
+      🏪 All Items <span class="cat-count">${items.length}</span></div>` +
+      cats.map(c => {
+        const cnt = items.filter(i => i.cat === c).length;
+        const em = CAT_EMOJI[c] || '📦';
+        return `<div class="cat-item${activeCategory===c?' active':''}" onclick="window.selectCat('${esc(c)}')">${em} ${esc(c)} <span class="cat-count">${cnt}</span></div>`;
+      }).join('');
+  }
+
+  window.selectCat = function(cat) {
+    activeCategory = cat;
+    renderSidebar();
+    renderTable();
+  };
+
+  // ── TABLE ────────────────────────────────────────────────────
+  window.setSort = function(field) {
+    if (sortField === field) sortDirs[field] *= -1;
+    else { sortField = field; }
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('sort' + (field === 'name' ? 'Name' : 'Price')).classList.add('active');
+    renderTable();
+  };
+
+  function getFilteredItems() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    let filtered = items.filter(item => {
+      if (activeCategory !== 'All' && item.cat !== activeCategory) return false;
+      if (q && !item.name.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    filtered.sort((a, b) => {
+      if (sortField === 'name') return a.name.localeCompare(b.name) * sortDirs.name;
+      return (a.price - b.price) * sortDirs.price;
+    });
+    return filtered;
+  }
+
+  function renderTable() {
+    const filtered = getFilteredItems();
+    const tbody = document.getElementById('tableBody');
+    const empty = document.getElementById('emptyState');
+    const hasFilter = activeCategory !== 'All' || document.getElementById('searchInput').value;
+    document.getElementById('filterStat').style.display = hasFilter ? '' : 'none';
+    document.getElementById('filteredCount').textContent = filtered.length;
+
+    if (filtered.length === 0) { tbody.innerHTML = ''; empty.style.display = ''; return; }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = filtered.map(item => {
+      if (item.id === editingId) return renderEditRow(item);
+      return `<tr data-id="${item.id}">
+        <td class="td-name">${esc(item.name)}</td>
+        <td class="td-price"><span class="price-badge ${pc(item.price)}">💰 ${item.price}</span></td>
+        <td class="td-cat" style="color:var(--muted)">${esc(item.cat)}</td>
+        <td class="td-actions">
+          <button class="action-btn" title="Edit" onclick="window.startEdit('${item.id}')">✏️</button>
+          <button class="action-btn delete-btn" title="Delete" onclick="window.deleteItem('${item.id}')">🗑</button>
+        </td>
+      </tr>`;
+    }).join('');
+    updateStats();
+  }
+
+  function renderEditRow(item) {
+    const catOptions = getCategories().map(c =>
+      `<option value="${esc(c)}"${c===item.cat?' selected':''}>${esc(c)}</option>`
+    ).join('');
+    return `<tr class="editing" data-id="${item.id}">
+      <td><input class="inline-input name-input" id="editName" value="${esc(item.name)}" onkeydown="window.editKeydown(event,'${item.id}')"></td>
+      <td><input class="inline-input price-input" id="editPrice" type="number" value="${item.price}" min="0" step="0.01" onkeydown="window.editKeydown(event,'${item.id}')"></td>
+      <td><select class="inline-select" id="editCat">${catOptions}</select></td>
+      <td class="td-actions">
+        <button class="action-btn confirm" onclick="window.saveEdit('${item.id}')">✔</button>
+        <button class="action-btn cancel-btn" onclick="window.cancelEdit()">✕</button>
+      </td>
+    </tr>`;
+  }
+
+  window.editKeydown = function(e, id) {
+    if (e.key === 'Enter') window.saveEdit(id);
+    if (e.key === 'Escape') window.cancelEdit();
+  };
+
+  window.startEdit = function(id) {
+    editingId = id;
+    renderTable();
+    setTimeout(() => { const el = document.getElementById('editName'); if (el) el.focus(); }, 50);
+  };
+
+  window.saveEdit = async function(id) {
+    const name = document.getElementById('editName').value.trim();
+    const price = parseFloat(document.getElementById('editPrice').value);
+    const cat = document.getElementById('editCat').value;
+    if (!name) { showToast('Item name cannot be empty', 'error'); return; }
+    if (isNaN(price) || price < 0) { showToast('Invalid price', 'error'); return; }
+    setSaving(true);
+    try {
+      await updateDoc(doc(db, "items", id), { name, price, cat });
+      const idx = items.findIndex(i => i.id === id);
+      if (idx >= 0) items[idx] = { id, name, price, cat };
+      editingId = null;
+      renderTable();
+      renderSidebar();
+      showToast(`✔ Saved: ${name}`);
+    } catch(e) {
+      showToast('Save failed: ' + e.message, 'error');
+    } finally { setSaving(false); }
+  };
+
+  window.cancelEdit = function() { editingId = null; renderTable(); };
+
+  window.deleteItem = function(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    confirmCallback = async () => {
+      setSaving(true);
+      try {
+        await deleteDoc(doc(db, "items", id));
+        items = items.filter(i => i.id !== id);
+        if (editingId === id) editingId = null;
+        renderTable();
+        renderSidebar();
+        showToast(`🗑 Deleted: ${item.name}`);
+      } catch(e) {
+        showToast('Delete failed: ' + e.message, 'error');
+      } finally { setSaving(false); }
+    };
+    document.getElementById('confirmMsg').innerHTML = `Delete <strong>${esc(item.name)}</strong>? This cannot be undone.`;
+    document.getElementById('confirmModal').classList.add('open');
+  };
+
+  window.confirmBulkDelete = function() {
+    if (activeCategory === 'All') { showToast('Select a category first', 'error'); return; }
+    const toDelete = items.filter(i => i.cat === activeCategory);
+    if (toDelete.length === 0) { showToast('Category is empty', 'error'); return; }
+    confirmCallback = async () => {
+      setSaving(true);
+      try {
+        const batch = writeBatch(db);
+        toDelete.forEach(item => batch.delete(doc(db, "items", item.id)));
+        await batch.commit();
+        items = items.filter(i => i.cat !== activeCategory);
+        activeCategory = 'All';
+        renderSidebar();
+        renderTable();
+        showToast(`🗑 Deleted ${toDelete.length} items`);
+      } catch(e) {
+        showToast('Bulk delete failed: ' + e.message, 'error');
+      } finally { setSaving(false); }
+    };
+    document.getElementById('confirmMsg').innerHTML = `Delete all <strong>${toDelete.length} items</strong> in <strong>${esc(activeCategory)}</strong>? Cannot be undone.`;
+    document.getElementById('confirmModal').classList.add('open');
+  };
+
+  window.executeConfirm = function() { closeConfirm(); if (confirmCallback) { confirmCallback(); confirmCallback = null; } };
+  window.closeConfirm = function() { document.getElementById('confirmModal').classList.remove('open'); };
+
+  // ── ADD ITEM MODAL ───────────────────────────────────────────
+  window.openAddItem = function() {
+    modalEditId = null;
+    document.getElementById('modalTitle').textContent = 'ADD ITEM';
+    document.getElementById('modalName').value = '';
+    document.getElementById('modalPrice').value = '';
+    populateCatSelect();
+    if (activeCategory !== 'All') document.getElementById('modalCat').value = activeCategory;
+    document.getElementById('itemModal').classList.add('open');
+    setTimeout(() => document.getElementById('modalName').focus(), 100);
+  };
+
+  function populateCatSelect() {
+    const sel = document.getElementById('modalCat');
+    sel.innerHTML = getCategories().map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  }
+
+  window.closeItemModal = function() { document.getElementById('itemModal').classList.remove('open'); };
+
+  window.saveItem = async function() {
+    const name = document.getElementById('modalName').value.trim();
+    const price = parseFloat(document.getElementById('modalPrice').value);
+    const cat = document.getElementById('modalCat').value;
+    if (!name) { showToast('Enter an item name', 'error'); return; }
+    if (isNaN(price) || price < 0) { showToast('Enter a valid price', 'error'); return; }
+    if (!cat) { showToast('Select a category', 'error'); return; }
+    const btn = document.getElementById('saveItemBtn');
+    btn.disabled = true;
+    setSaving(true);
+    try {
+      const ref = await addDoc(collection(db, "items"), { name, price, cat, createdAt: serverTimestamp() });
+      items.push({ id: ref.id, name, price, cat });
+      closeItemModal();
+      renderSidebar();
+      renderTable();
+      showToast(`✔ Added: ${name}`);
+    } catch(e) {
+      showToast('Add failed: ' + e.message, 'error');
+    } finally { btn.disabled = false; setSaving(false); }
+  };
+
+  // ── ADD CATEGORY ─────────────────────────────────────────────
+  window.openAddCat = function() {
+    document.getElementById('catModalName').value = '';
+    document.getElementById('catModalEmoji').value = '';
+    document.getElementById('catModal').classList.add('open');
+    setTimeout(() => document.getElementById('catModalName').focus(), 100);
+  };
+  window.closeCatModal = function() { document.getElementById('catModal').classList.remove('open'); };
+
+  window.saveCat = async function() {
+    const name = document.getElementById('catModalName').value.trim();
+    const emoji = document.getElementById('catModalEmoji').value.trim();
+    if (!name) { showToast('Enter a category name', 'error'); return; }
+    if (getCategories().includes(name)) { showToast('Category already exists', 'error'); return; }
+    const btn = document.getElementById('saveCatBtn');
+    btn.disabled = true;
+    setSaving(true);
+    try {
+      await setDoc(doc(db, "categories", name), {
+        name, emoji: emoji || '📦', order: getCategories().length, createdAt: serverTimestamp()
+      });
+      closeCatModal();
+      renderSidebar();
+      showToast(`✔ Created category: ${name}`);
+    } catch(e) {
+      showToast('Create failed: ' + e.message, 'error');
+    } finally { btn.disabled = false; setSaving(false); }
+  };
+
+  // ── SEED MODAL ───────────────────────────────────────────────
+  window.openSeedModal = function() { document.getElementById('seedModal').classList.add('open'); };
+  window.closeSeedModal = function() { document.getElementById('seedModal').classList.remove('open'); };
+
+  window.runSeed = async function() {
+    const btn = document.getElementById('seedBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Uploading…';
+    setSaving(true);
+    closeSeedModal();
+    try {
+      const SEED = [{"name":"Oak Log","price":2.0,"cat":"Logs"},{"name":"Spruce Log","price":2.0,"cat":"Logs"},{"name":"Birch Log","price":2.0,"cat":"Logs"},{"name":"Jungle Log","price":2.0,"cat":"Logs"},{"name":"Acacia Log","price":2.0,"cat":"Logs"},{"name":"Dark Oak Log","price":2.0,"cat":"Logs"},{"name":"Pale Oak Log","price":2.0,"cat":"Logs"},{"name":"Mangrove Log","price":2.0,"cat":"Logs"},{"name":"Cherry Log","price":2.5,"cat":"Logs"},{"name":"Crimson Stem","price":2.5,"cat":"Logs"},{"name":"Warped Stem","price":2.5,"cat":"Logs"},{"name":"Bamboo Block","price":1.5,"cat":"Logs"},{"name":"Stripped Oak Log","price":2.5,"cat":"Stripped Logs"},{"name":"Stripped Spruce Log","price":2.5,"cat":"Stripped Logs"},{"name":"Stripped Birch Log","price":2.5,"cat":"Stripped Logs"},{"name":"Stripped Jungle Log","price":2.5,"cat":"Stripped Logs"},{"name":"Stripped Acacia Log","price":2.5,"cat":"Stripped Logs"},{"name":"Stripped Dark Oak Log","price":2.5,"cat":"Stripped Logs"},{"name":"Stripped Mangrove Log","price":2.5,"cat":"Stripped Logs"},{"name":"Stripped Cherry Log","price":3.0,"cat":"Stripped Logs"},{"name":"Stripped Pale Oak Log","price":2.5,"cat":"Stripped Logs"},{"name":"Oak Planks","price":0.75,"cat":"Planks"},{"name":"Spruce Planks","price":0.75,"cat":"Planks"},{"name":"Birch Planks","price":0.75,"cat":"Planks"},{"name":"Jungle Planks","price":0.75,"cat":"Planks"},{"name":"Acacia Planks","price":0.75,"cat":"Planks"},{"name":"Dark Oak Planks","price":0.75,"cat":"Planks"},{"name":"Mangrove Planks","price":0.75,"cat":"Planks"},{"name":"Cherry Planks","price":1.0,"cat":"Planks"},{"name":"Crimson Planks","price":0.75,"cat":"Planks"},{"name":"Warped Planks","price":0.75,"cat":"Planks"},{"name":"Bamboo Planks","price":0.5,"cat":"Planks"},{"name":"Pale Oak Planks","price":0.75,"cat":"Planks"},{"name":"Bamboo Mosaic","price":3.0,"cat":"Planks"},{"name":"Oak Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Spruce Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Birch Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Jungle Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Acacia Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Dark Oak Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Mangrove Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Cherry Leaves","price":1.0,"cat":"Leaves & Saplings"},{"name":"Pale Oak Leaves","price":0.5,"cat":"Leaves & Saplings"},{"name":"Azalea Leaves","price":1.0,"cat":"Leaves & Saplings"},{"name":"Flowering Azalea Leaves","price":1.5,"cat":"Leaves & Saplings"},{"name":"Oak Sapling","price":2.0,"cat":"Leaves & Saplings"},{"name":"Spruce Sapling","price":2.0,"cat":"Leaves & Saplings"},{"name":"Birch Sapling","price":2.0,"cat":"Leaves & Saplings"},{"name":"Jungle Sapling","price":2.5,"cat":"Leaves & Saplings"},{"name":"Acacia Sapling","price":2.0,"cat":"Leaves & Saplings"},{"name":"Dark Oak Sapling","price":2.0,"cat":"Leaves & Saplings"},{"name":"Cherry Sapling","price":3.0,"cat":"Leaves & Saplings"},{"name":"Mangrove Propagule","price":2.0,"cat":"Leaves & Saplings"},{"name":"Pale Oak Sapling","price":2.0,"cat":"Leaves & Saplings"},{"name":"Cobblestone","price":1.0,"cat":"Stone & Earth"},{"name":"Stone","price":2.0,"cat":"Stone & Earth"},{"name":"Smooth Stone","price":3.0,"cat":"Stone & Earth"},{"name":"Granite","price":1.5,"cat":"Stone & Earth"},{"name":"Diorite","price":1.5,"cat":"Stone & Earth"},{"name":"Andesite","price":1.5,"cat":"Stone & Earth"},{"name":"Polished Granite","price":2.5,"cat":"Stone & Earth"},{"name":"Polished Diorite","price":2.5,"cat":"Stone & Earth"},{"name":"Polished Andesite","price":2.5,"cat":"Stone & Earth"},{"name":"Dirt","price":0.5,"cat":"Stone & Earth"},{"name":"Coarse Dirt","price":0.5,"cat":"Stone & Earth"},{"name":"Rooted Dirt","price":0.5,"cat":"Stone & Earth"},{"name":"Grass Block","price":1.0,"cat":"Stone & Earth"},{"name":"Podzol","price":1.0,"cat":"Stone & Earth"},{"name":"Mycelium","price":2.0,"cat":"Stone & Earth"},{"name":"Sand","price":1.0,"cat":"Stone & Earth"},{"name":"Red Sand","price":1.5,"cat":"Stone & Earth"},{"name":"Sandstone","price":2.0,"cat":"Stone & Earth"},{"name":"Red Sandstone","price":2.5,"cat":"Stone & Earth"},{"name":"Smooth Sandstone","price":3.0,"cat":"Stone & Earth"},{"name":"Smooth Red Sandstone","price":3.5,"cat":"Stone & Earth"},{"name":"Chiseled Sandstone","price":3.0,"cat":"Stone & Earth"},{"name":"Chiseled Red Sandstone","price":3.5,"cat":"Stone & Earth"},{"name":"Clay","price":12.0,"cat":"Stone & Earth"},{"name":"Clay Ball","price":3.0,"cat":"Stone & Earth"},{"name":"Flint","price":3.0,"cat":"Stone & Earth"},{"name":"Gravel","price":1.0,"cat":"Stone & Earth"},{"name":"Mud","price":1.0,"cat":"Stone & Earth"},{"name":"Packed Mud","price":3.0,"cat":"Stone & Earth"},{"name":"Mud Bricks","price":5.0,"cat":"Stone & Earth"},{"name":"Deepslate","price":2.0,"cat":"Deepslate"},{"name":"Cobbled Deepslate","price":1.5,"cat":"Deepslate"},{"name":"Polished Deepslate","price":3.0,"cat":"Deepslate"},{"name":"Deepslate Bricks","price":4.0,"cat":"Deepslate"},{"name":"Deepslate Tiles","price":5.0,"cat":"Deepslate"},{"name":"Chiseled Deepslate","price":4.0,"cat":"Deepslate"},{"name":"Stone Bricks","price":3.0,"cat":"Bricks"},{"name":"Mossy Stone Bricks","price":8.0,"cat":"Bricks"},{"name":"Cracked Stone Bricks","price":4.0,"cat":"Bricks"},{"name":"Chiseled Stone Bricks","price":5.0,"cat":"Bricks"},{"name":"Mossy Cobblestone","price":5.0,"cat":"Bricks"},{"name":"Brick","price":21.0,"cat":"Bricks"},{"name":"Bricks","price":18.0,"cat":"Bricks"},{"name":"Tuff","price":2.0,"cat":"Tuff"},{"name":"Polished Tuff","price":3.0,"cat":"Tuff"},{"name":"Tuff Bricks","price":4.0,"cat":"Tuff"},{"name":"Chiseled Tuff","price":5.0,"cat":"Tuff"},{"name":"Tuff Brick Slab","price":2.0,"cat":"Tuff"},{"name":"Tuff Brick Stairs","price":3.0,"cat":"Tuff"},{"name":"Tuff Brick Wall","price":3.0,"cat":"Tuff"},{"name":"Coal Ore","price":15.0,"cat":"Ores"},{"name":"Iron Ore","price":18.0,"cat":"Ores"},{"name":"Gold Ore","price":45.0,"cat":"Ores"},{"name":"Diamond Ore","price":200.0,"cat":"Ores"},{"name":"Emerald Ore","price":280.0,"cat":"Ores"},{"name":"Lapis Ore","price":100.0,"cat":"Ores"},{"name":"Redstone Ore","price":30.0,"cat":"Ores"},{"name":"Copper Ore","price":15.0,"cat":"Ores"},{"name":"Deepslate Coal Ore","price":18.0,"cat":"Ores"},{"name":"Deepslate Iron Ore","price":25.0,"cat":"Ores"},{"name":"Deepslate Gold Ore","price":55.0,"cat":"Ores"},{"name":"Deepslate Diamond Ore","price":250.0,"cat":"Ores"},{"name":"Deepslate Emerald Ore","price":320.0,"cat":"Ores"},{"name":"Deepslate Lapis Ore","price":120.0,"cat":"Ores"},{"name":"Deepslate Redstone Ore","price":38.0,"cat":"Ores"},{"name":"Deepslate Copper Ore","price":18.0,"cat":"Ores"},{"name":"Nether Gold Ore","price":40.0,"cat":"Ores"},{"name":"Nether Quartz Ore","price":25.0,"cat":"Ores"},{"name":"Ancient Debris","price":300.0,"cat":"Ores"},{"name":"Coal","price":15.0,"cat":"Materials"},{"name":"Charcoal","price":10.0,"cat":"Materials"},{"name":"Raw Iron","price":15.0,"cat":"Materials"},{"name":"Iron Ingot","price":22.0,"cat":"Materials"},{"name":"Iron Nugget","price":3.0,"cat":"Materials"},{"name":"Raw Gold","price":80.0,"cat":"Materials"},{"name":"Gold Ingot","price":105.0,"cat":"Materials"},{"name":"Gold Nugget","price":12.0,"cat":"Materials"},{"name":"Diamond","price":180.0,"cat":"Materials"},{"name":"Emerald","price":250.0,"cat":"Materials"},{"name":"Quartz","price":25.0,"cat":"Materials"},{"name":"Raw Copper","price":8.0,"cat":"Materials"},{"name":"Copper Ingot","price":10.0,"cat":"Materials"},{"name":"Amethyst Shard","price":30.0,"cat":"Materials"},{"name":"Echo Shard","price":500.0,"cat":"Materials"},{"name":"Disc Fragment 5","price":200.0,"cat":"Materials"},{"name":"Netherite Scrap","price":300.0,"cat":"Materials"},{"name":"Netherite Ingot","price":1300.0,"cat":"Materials"},{"name":"Netherite Upgrade Template","price":800.0,"cat":"Materials"},{"name":"Coal Block","price":135.0,"cat":"Material Blocks"},{"name":"Iron Block","price":198.0,"cat":"Material Blocks"},{"name":"Gold Block","price":945.0,"cat":"Material Blocks"},{"name":"Diamond Block","price":1600.0,"cat":"Material Blocks"},{"name":"Emerald Block","price":2250.0,"cat":"Material Blocks"},{"name":"Lapis Block","price":90.0,"cat":"Material Blocks"},{"name":"Redstone Block","price":270.0,"cat":"Material Blocks"},{"name":"Copper Block","price":90.0,"cat":"Material Blocks"},{"name":"Netherite Block","price":11700.0,"cat":"Material Blocks"},{"name":"Amethyst Block","price":120.0,"cat":"Material Blocks"},{"name":"Quartz Block","price":90.0,"cat":"Material Blocks"},{"name":"Smooth Quartz","price":95.0,"cat":"Material Blocks"},{"name":"Exposed Copper","price":10.0,"cat":"Copper Variants"},{"name":"Weathered Copper","price":10.0,"cat":"Copper Variants"},{"name":"Oxidized Copper","price":10.0,"cat":"Copper Variants"},{"name":"Cut Copper","price":12.0,"cat":"Copper Variants"},{"name":"Chiseled Copper","price":12.0,"cat":"Copper Variants"},{"name":"Waxed Copper Block","price":12.0,"cat":"Copper Variants"},{"name":"Waxed Cut Copper","price":14.0,"cat":"Copper Variants"},{"name":"Copper Grate","price":15.0,"cat":"Copper Variants"},{"name":"Copper Bulb","price":20.0,"cat":"Copper Variants"},{"name":"Netherrack","price":0.5,"cat":"Nether"},{"name":"Nether Brick","price":5.0,"cat":"Nether"},{"name":"Nether Bricks","price":5.0,"cat":"Nether"},{"name":"Nether Brick Fence","price":3.0,"cat":"Nether"},{"name":"Red Nether Bricks","price":8.0,"cat":"Nether"},{"name":"Soul Sand","price":5.0,"cat":"Nether"},{"name":"Soul Soil","price":5.0,"cat":"Nether"},{"name":"Magma Block","price":15.0,"cat":"Nether"},{"name":"Shroomlight","price":25.0,"cat":"Nether"},{"name":"Glowstone","price":30.0,"cat":"Nether"},{"name":"Glowstone Dust","price":10.0,"cat":"Nether"},{"name":"Blaze Rod","price":40.0,"cat":"Nether"},{"name":"Nether Star","price":5000.0,"cat":"Nether"},{"name":"Basalt","price":2.0,"cat":"Nether"},{"name":"Blackstone","price":3.0,"cat":"Nether"},{"name":"Gilded Blackstone","price":80.0,"cat":"Nether"},{"name":"Crying Obsidian","price":100.0,"cat":"Nether"},{"name":"Respawn Anchor","price":500.0,"cat":"Nether"},{"name":"Nether Wart","price":15.0,"cat":"Nether"},{"name":"End Stone","price":5.0,"cat":"The End"},{"name":"End Stone Bricks","price":8.0,"cat":"The End"},{"name":"Purpur Block","price":8.0,"cat":"The End"},{"name":"Purpur Pillar","price":8.0,"cat":"The End"},{"name":"Chorus Fruit","price":15.0,"cat":"The End"},{"name":"Popped Chorus Fruit","price":20.0,"cat":"The End"},{"name":"End Rod","price":10.0,"cat":"The End"},{"name":"Shulker Shell","price":350.0,"cat":"The End"},{"name":"Elytra","price":5000.0,"cat":"The End"},{"name":"End Crystal","price":500.0,"cat":"The End"},{"name":"Bone Block","price":18.0,"cat":"The End"},{"name":"Prismarine","price":20.0,"cat":"Ocean"},{"name":"Prismarine Bricks","price":25.0,"cat":"Ocean"},{"name":"Dark Prismarine","price":30.0,"cat":"Ocean"},{"name":"Prismarine Shard","price":15.0,"cat":"Ocean"},{"name":"Prismarine Crystals","price":20.0,"cat":"Ocean"},{"name":"Sea Lantern","price":50.0,"cat":"Ocean"},{"name":"Wet Sponge","price":40.0,"cat":"Ocean"},{"name":"Heart of the Sea","price":1000.0,"cat":"Ocean"},{"name":"Nautilus Shell","price":150.0,"cat":"Ocean"},{"name":"Conduit","price":2500.0,"cat":"Ocean"},{"name":"Scute","price":100.0,"cat":"Ocean"},{"name":"Turtle Egg","price":50.0,"cat":"Ocean"},{"name":"Kelp","price":2.0,"cat":"Ocean"},{"name":"Dried Kelp","price":1.0,"cat":"Ocean"},{"name":"Dried Kelp Block","price":5.0,"cat":"Ocean"},{"name":"Seagrass","price":1.0,"cat":"Ocean"},{"name":"Sea Pickle","price":5.0,"cat":"Ocean"},{"name":"Coral Block","price":20.0,"cat":"Ocean"},{"name":"Coral","price":10.0,"cat":"Ocean"},{"name":"Coral Fan","price":8.0,"cat":"Ocean"},{"name":"Mangrove Roots","price":1.0,"cat":"Swamp"},{"name":"Muddy Mangrove Roots","price":2.0,"cat":"Swamp"},{"name":"Ochre Froglight","price":20.0,"cat":"Swamp"},{"name":"Verdant Froglight","price":20.0,"cat":"Swamp"},{"name":"Pearlescent Froglight","price":20.0,"cat":"Swamp"},{"name":"Frogspawn","price":30.0,"cat":"Swamp"},{"name":"Sculk Vein","price":3.0,"cat":"Sculk"},{"name":"Sculk","price":5.0,"cat":"Sculk"},{"name":"Sculk Sensor","price":40.0,"cat":"Sculk"},{"name":"Sculk Catalyst","price":80.0,"cat":"Sculk"},{"name":"Sculk Shrieker","price":100.0,"cat":"Sculk"},{"name":"Calibrated Sculk Sensor","price":120.0,"cat":"Sculk"},{"name":"Wind Charge","price":20.0,"cat":"Trial Chambers"},{"name":"Trial Key","price":30.0,"cat":"Trial Chambers"},{"name":"Ominous Bottle","price":50.0,"cat":"Trial Chambers"},{"name":"Breeze Rod","price":80.0,"cat":"Trial Chambers"},{"name":"Ominous Trial Key","price":100.0,"cat":"Trial Chambers"},{"name":"Mace","price":1200.0,"cat":"Trial Chambers"},{"name":"Heavy Core","price":900.0,"cat":"Trial Chambers"},{"name":"Sentry Armor Trim","price":100.0,"cat":"Armor Trims"},{"name":"Coast Armor Trim","price":100.0,"cat":"Armor Trims"},{"name":"Wild Armor Trim","price":120.0,"cat":"Armor Trims"},{"name":"Tide Armor Trim","price":120.0,"cat":"Armor Trims"},{"name":"Dune Armor Trim","price":120.0,"cat":"Armor Trims"},{"name":"Snout Armor Trim","price":150.0,"cat":"Armor Trims"},{"name":"Rib Armor Trim","price":150.0,"cat":"Armor Trims"},{"name":"Eye Armor Trim","price":150.0,"cat":"Armor Trims"},{"name":"Vex Armor Trim","price":150.0,"cat":"Armor Trims"},{"name":"Wayfinder Armor Trim","price":180.0,"cat":"Armor Trims"},{"name":"Raiser Armor Trim","price":180.0,"cat":"Armor Trims"},{"name":"Shaper Armor Trim","price":180.0,"cat":"Armor Trims"},{"name":"Host Armor Trim","price":180.0,"cat":"Armor Trims"},{"name":"Spire Armor Trim","price":200.0,"cat":"Armor Trims"},{"name":"Flow Armor Trim","price":300.0,"cat":"Armor Trims"},{"name":"Bolt Armor Trim","price":300.0,"cat":"Armor Trims"},{"name":"Ward Armor Trim","price":300.0,"cat":"Armor Trims"},{"name":"Silence Armor Trim","price":500.0,"cat":"Armor Trims"},{"name":"Arms Up Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Brewer Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Burn Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Danger Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Explorer Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Friend Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Heart Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Heartbreak Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Miner Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Mourner Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Plenty Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Scrape Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Sheaf Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Shelter Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Snort Pottery Sherd","price":60.0,"cat":"Pottery Sherds"},{"name":"Flow Pottery Sherd","price":80.0,"cat":"Pottery Sherds"},{"name":"Guster Pottery Sherd","price":80.0,"cat":"Pottery Sherds"},{"name":"Howl Pottery Sherd","price":80.0,"cat":"Pottery Sherds"},{"name":"Prize Pottery Sherd","price":80.0,"cat":"Pottery Sherds"},{"name":"Skull Pottery Sherd","price":80.0,"cat":"Pottery Sherds"},{"name":"Decorated Pot","price":80.0,"cat":"Pottery Sherds"},{"name":"Armadillo Scute","price":60.0,"cat":"Armadillo"},{"name":"Wolf Armor","price":250.0,"cat":"Armadillo"},{"name":"Sniffer Egg","price":200.0,"cat":"Sniffer"},{"name":"Torchflower Seeds","price":20.0,"cat":"Sniffer"},{"name":"Pitcher Pod","price":20.0,"cat":"Sniffer"},{"name":"Pitcher Plant","price":25.0,"cat":"Sniffer"},{"name":"Torchflower","price":25.0,"cat":"Sniffer"},{"name":"Pale Moss Carpet","price":3.0,"cat":"Pale Garden"},{"name":"Pale Moss Block","price":5.0,"cat":"Pale Garden"},{"name":"Pale Hanging Moss","price":5.0,"cat":"Pale Garden"},{"name":"Eyeblossom","price":10.0,"cat":"Pale Garden"},{"name":"Creaking Heart","price":300.0,"cat":"Pale Garden"},{"name":"Resin Clump","price":8.0,"cat":"Resin"},{"name":"Resin Brick","price":15.0,"cat":"Resin"},{"name":"Chiseled Resin Bricks","price":20.0,"cat":"Resin"},{"name":"Resin Block","price":120.0,"cat":"Resin"},{"name":"Rotten Flesh","price":1.0,"cat":"Mob Drops"},{"name":"Bone","price":2.0,"cat":"Mob Drops"},{"name":"String","price":5.0,"cat":"Mob Drops"},{"name":"Gunpowder","price":22.0,"cat":"Mob Drops"},{"name":"Slimeball","price":50.0,"cat":"Mob Drops"},{"name":"Ender Pearl","price":50.0,"cat":"Mob Drops"},{"name":"Ender Eye","price":80.0,"cat":"Mob Drops"},{"name":"Feather","price":3.0,"cat":"Mob Drops"},{"name":"Leather","price":10.0,"cat":"Mob Drops"},{"name":"Rabbit Hide","price":8.0,"cat":"Mob Drops"},{"name":"Glow Ink Sac","price":30.0,"cat":"Mob Drops"},{"name":"Egg","price":1.0,"cat":"Mob Drops"},{"name":"Totem of Undying","price":800.0,"cat":"Mob Drops"},{"name":"Wither Skeleton Skull","price":500.0,"cat":"Mob Drops"},{"name":"Skeleton Skull","price":100.0,"cat":"Mob Drops"},{"name":"Zombie Head","price":80.0,"cat":"Mob Drops"},{"name":"Creeper Head","price":200.0,"cat":"Mob Drops"},{"name":"Trident","price":500.0,"cat":"Mob Drops"},{"name":"Phantom Membrane","price":80.0,"cat":"Mob Drops"},{"name":"Ghast Tear","price":150.0,"cat":"Mob Drops"},{"name":"Turtle Scute","price":100.0,"cat":"Mob Drops"},{"name":"Dragon Breath","price":200.0,"cat":"Mob Drops"},{"name":"Spider Eye","price":8.0,"cat":"Mob Drops"},{"name":"Rabbit Foot","price":50.0,"cat":"Mob Drops"},{"name":"Pufferfish","price":10.0,"cat":"Mob Drops"},{"name":"Blaze Powder","price":22.0,"cat":"Mob Drops"},{"name":"Magma Cream","price":20.0,"cat":"Mob Drops"},{"name":"Piglin Head","price":80.0,"cat":"Mob Drops"},{"name":"Dragon Head","price":800.0,"cat":"Mob Drops"},{"name":"Raw Beef","price":5.0,"cat":"Mob Drops"},{"name":"Raw Porkchop","price":4.0,"cat":"Mob Drops"},{"name":"Raw Chicken","price":3.0,"cat":"Mob Drops"},{"name":"Raw Mutton","price":4.0,"cat":"Mob Drops"},{"name":"Raw Rabbit","price":4.0,"cat":"Mob Drops"},{"name":"Raw Cod","price":3.0,"cat":"Mob Drops"},{"name":"Raw Salmon","price":4.0,"cat":"Mob Drops"},{"name":"Goat Horn","price":40.0,"cat":"Mob Drops"},{"name":"Apple","price":10.0,"cat":"Food"},{"name":"Golden Apple","price":100.0,"cat":"Food"},{"name":"Enchanted Golden Apple","price":2000.0,"cat":"Food"},{"name":"Bread","price":30.0,"cat":"Food"},{"name":"Wheat","price":9.0,"cat":"Food"},{"name":"Carrot","price":5.0,"cat":"Food"},{"name":"Potato","price":4.0,"cat":"Food"},{"name":"Baked Potato","price":8.0,"cat":"Food"},{"name":"Poisonous Potato","price":1.0,"cat":"Food"},{"name":"Beetroot","price":5.0,"cat":"Food"},{"name":"Beetroot Soup","price":20.0,"cat":"Food"},{"name":"Melon Slice","price":1.5,"cat":"Food"},{"name":"Pumpkin Pie","price":25.0,"cat":"Food"},{"name":"Sweet Berries","price":3.0,"cat":"Food"},{"name":"Glow Berries","price":5.0,"cat":"Food"},{"name":"Cookie","price":3.0,"cat":"Food"},{"name":"Cake","price":180.0,"cat":"Food"},{"name":"Mushroom Stew","price":4.5,"cat":"Food"},{"name":"Rabbit Stew","price":30.0,"cat":"Food"},{"name":"Suspicious Stew","price":10.0,"cat":"Food"},{"name":"Cooked Beef","price":12.0,"cat":"Food"},{"name":"Cooked Porkchop","price":7.0,"cat":"Food"},{"name":"Cooked Chicken","price":8.0,"cat":"Food"},{"name":"Cooked Mutton","price":10.0,"cat":"Food"},{"name":"Cooked Rabbit","price":10.0,"cat":"Food"},{"name":"Cooked Cod","price":7.0,"cat":"Food"},{"name":"Cooked Salmon","price":10.0,"cat":"Food"},{"name":"Tropical Fish","price":8.0,"cat":"Food"},{"name":"Honey Bottle","price":20.0,"cat":"Food"},{"name":"Honeycomb","price":15.0,"cat":"Food"},{"name":"Sugar Cane","price":10.0,"cat":"Food"},{"name":"Sugar","price":10.0,"cat":"Food"},{"name":"Golden Carrot","price":80.0,"cat":"Food"},{"name":"Glistering Melon Slice","price":40.0,"cat":"Food"},{"name":"Wheat Seeds","price":2.0,"cat":"Plants"},{"name":"Melon Seeds","price":3.0,"cat":"Plants"},{"name":"Pumpkin Seeds","price":3.0,"cat":"Plants"},{"name":"Beetroot Seeds","price":2.0,"cat":"Plants"},{"name":"Bamboo","price":1.0,"cat":"Plants"},{"name":"Cactus","price":10.0,"cat":"Plants"},{"name":"Brown Mushroom","price":2.0,"cat":"Plants"},{"name":"Red Mushroom","price":2.0,"cat":"Plants"},{"name":"Crimson Fungus","price":5.0,"cat":"Plants"},{"name":"Warped Fungus","price":5.0,"cat":"Plants"},{"name":"Lily Pad","price":3.0,"cat":"Plants"},{"name":"Dandelion","price":2.0,"cat":"Plants"},{"name":"Poppy","price":2.0,"cat":"Plants"},{"name":"Blue Orchid","price":5.0,"cat":"Plants"},{"name":"Allium","price":5.0,"cat":"Plants"},{"name":"Azure Bluet","price":5.0,"cat":"Plants"},{"name":"Red Tulip","price":5.0,"cat":"Plants"},{"name":"Orange Tulip","price":5.0,"cat":"Plants"},{"name":"White Tulip","price":5.0,"cat":"Plants"},{"name":"Pink Tulip","price":5.0,"cat":"Plants"},{"name":"Oxeye Daisy","price":5.0,"cat":"Plants"},{"name":"Cornflower","price":5.0,"cat":"Plants"},{"name":"Lily of the Valley","price":5.0,"cat":"Plants"},{"name":"Wither Rose","price":50.0,"cat":"Plants"},{"name":"Sunflower","price":8.0,"cat":"Plants"},{"name":"Lilac","price":8.0,"cat":"Plants"},{"name":"Rose Bush","price":8.0,"cat":"Plants"},{"name":"Peony","price":8.0,"cat":"Plants"},{"name":"Spore Blossom","price":30.0,"cat":"Plants"},{"name":"Azalea","price":15.0,"cat":"Plants"},{"name":"Flowering Azalea","price":20.0,"cat":"Plants"},{"name":"Moss Block","price":5.0,"cat":"Plants"},{"name":"Moss Carpet","price":3.0,"cat":"Plants"},{"name":"Vine","price":1.0,"cat":"Plants"},{"name":"Glow Lichen","price":5.0,"cat":"Plants"},{"name":"White Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"White Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Orange Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Orange Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Magenta Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Magenta Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Light Blue Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Light Blue Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Yellow Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Yellow Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Lime Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Lime Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Pink Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Pink Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Gray Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Gray Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Light Gray Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Light Gray Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Cyan Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Cyan Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Purple Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Purple Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Blue Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Blue Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Brown Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Brown Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Green Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Green Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Red Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Red Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"Black Wool","price":20.0,"cat":"Wool & Fabric"},{"name":"Black Carpet","price":8.0,"cat":"Wool & Fabric"},{"name":"White Dye","price":5.0,"cat":"Dyes"},{"name":"Orange Dye","price":5.0,"cat":"Dyes"},{"name":"Magenta Dye","price":5.0,"cat":"Dyes"},{"name":"Light Blue Dye","price":5.0,"cat":"Dyes"},{"name":"Yellow Dye","price":5.0,"cat":"Dyes"},{"name":"Lime Dye","price":5.0,"cat":"Dyes"},{"name":"Pink Dye","price":5.0,"cat":"Dyes"},{"name":"Gray Dye","price":5.0,"cat":"Dyes"},{"name":"Light Gray Dye","price":5.0,"cat":"Dyes"},{"name":"Cyan Dye","price":5.0,"cat":"Dyes"},{"name":"Purple Dye","price":5.0,"cat":"Dyes"},{"name":"Blue Dye","price":5.0,"cat":"Dyes"},{"name":"Brown Dye","price":5.0,"cat":"Dyes"},{"name":"Green Dye","price":5.0,"cat":"Dyes"},{"name":"Red Dye","price":5.0,"cat":"Dyes"},{"name":"Black Dye","price":5.0,"cat":"Dyes"},{"name":"Bone Meal","price":3.0,"cat":"Dyes"},{"name":"Ink Sac","price":10.0,"cat":"Dyes"},{"name":"Cocoa Beans","price":5.0,"cat":"Dyes"},{"name":"Lapis Lazuli","price":10.0,"cat":"Dyes"},{"name":"White Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Orange Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Magenta Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Light Blue Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Yellow Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Lime Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Pink Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Gray Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Light Gray Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Cyan Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Purple Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Blue Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Brown Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Green Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Red Terracotta","price":4.0,"cat":"Terracotta"},{"name":"Black Terracotta","price":4.0,"cat":"Terracotta"},{"name":"White Concrete","price":5.0,"cat":"Concrete"},{"name":"Orange Concrete","price":5.0,"cat":"Concrete"},{"name":"Magenta Concrete","price":5.0,"cat":"Concrete"},{"name":"Light Blue Concrete","price":5.0,"cat":"Concrete"},{"name":"Yellow Concrete","price":5.0,"cat":"Concrete"},{"name":"Lime Concrete","price":5.0,"cat":"Concrete"},{"name":"Pink Concrete","price":5.0,"cat":"Concrete"},{"name":"Gray Concrete","price":5.0,"cat":"Concrete"},{"name":"Light Gray Concrete","price":5.0,"cat":"Concrete"},{"name":"Cyan Concrete","price":5.0,"cat":"Concrete"},{"name":"Purple Concrete","price":5.0,"cat":"Concrete"},{"name":"Blue Concrete","price":5.0,"cat":"Concrete"},{"name":"Brown Concrete","price":5.0,"cat":"Concrete"},{"name":"Green Concrete","price":5.0,"cat":"Concrete"},{"name":"Red Concrete","price":5.0,"cat":"Concrete"},{"name":"Black Concrete","price":5.0,"cat":"Concrete"},{"name":"White Stained Glass","price":5.0,"cat":"Glass"},{"name":"Orange Stained Glass","price":5.0,"cat":"Glass"},{"name":"Magenta Stained Glass","price":5.0,"cat":"Glass"},{"name":"Light Blue Stained Glass","price":5.0,"cat":"Glass"},{"name":"Yellow Stained Glass","price":5.0,"cat":"Glass"},{"name":"Lime Stained Glass","price":5.0,"cat":"Glass"},{"name":"Pink Stained Glass","price":5.0,"cat":"Glass"},{"name":"Gray Stained Glass","price":5.0,"cat":"Glass"},{"name":"Light Gray Stained Glass","price":5.0,"cat":"Glass"},{"name":"Cyan Stained Glass","price":5.0,"cat":"Glass"},{"name":"Purple Stained Glass","price":5.0,"cat":"Glass"},{"name":"Blue Stained Glass","price":5.0,"cat":"Glass"},{"name":"Brown Stained Glass","price":5.0,"cat":"Glass"},{"name":"Green Stained Glass","price":5.0,"cat":"Glass"},{"name":"Red Stained Glass","price":5.0,"cat":"Glass"},{"name":"Black Stained Glass","price":5.0,"cat":"Glass"},{"name":"Glass","price":3.0,"cat":"Glass"},{"name":"Glass Pane","price":2.0,"cat":"Glass"},{"name":"Stick","price":0.25,"cat":"Misc"},{"name":"Paper","price":10.0,"cat":"Misc"},{"name":"Book","price":45.0,"cat":"Misc"},{"name":"Bookshelf","price":140.0,"cat":"Misc"},{"name":"Chiseled Bookshelf","price":60.0,"cat":"Misc"},{"name":"Saddle","price":100.0,"cat":"Misc"},{"name":"Name Tag","price":100.0,"cat":"Misc"},{"name":"Lead","price":20.0,"cat":"Misc"},{"name":"Map","price":20.0,"cat":"Misc"},{"name":"Clock","price":30.0,"cat":"Misc"},{"name":"Fishing Rod","price":10.0,"cat":"Misc"},{"name":"Brush","price":40.0,"cat":"Misc"},{"name":"Spyglass","price":80.0,"cat":"Misc"},{"name":"Flint and Steel","price":25.0,"cat":"Misc"},{"name":"Compass","price":22.0,"cat":"Misc"},{"name":"Bucket","price":22.0,"cat":"Misc"},{"name":"Shears","price":20.0,"cat":"Misc"},{"name":"Obsidian","price":130.0,"cat":"Misc"},{"name":"TNT","price":100.0,"cat":"Misc"},{"name":"Torch","price":4.0,"cat":"Misc"},{"name":"Lantern","price":15.0,"cat":"Misc"},{"name":"Soul Torch","price":5.0,"cat":"Misc"},{"name":"Soul Lantern","price":15.0,"cat":"Misc"},{"name":"Water Bucket","price":40.0,"cat":"Misc"},{"name":"Lava Bucket","price":40.0,"cat":"Misc"},{"name":"Milk Bucket","price":40.0,"cat":"Misc"},{"name":"Powder Snow Bucket","price":30.0,"cat":"Misc"},{"name":"Bundle","price":15.0,"cat":"Misc"},{"name":"Lodestone","price":300.0,"cat":"Misc"},{"name":"Minecart","price":23.0,"cat":"Transport"},{"name":"Chest Minecart","price":30.0,"cat":"Transport"},{"name":"Hopper Minecart","price":80.0,"cat":"Transport"},{"name":"Furnace Minecart","price":32.0,"cat":"Transport"},{"name":"TNT Minecart","price":80.0,"cat":"Transport"},{"name":"Rails","price":22.0,"cat":"Transport"},{"name":"Powered Rail","price":60.0,"cat":"Transport"},{"name":"Detector Rail","price":50.0,"cat":"Transport"},{"name":"Activator Rail","price":50.0,"cat":"Transport"},{"name":"Oak Boat","price":3.0,"cat":"Transport"},{"name":"Spruce Boat","price":3.0,"cat":"Transport"},{"name":"Birch Boat","price":3.0,"cat":"Transport"},{"name":"Jungle Boat","price":3.0,"cat":"Transport"},{"name":"Acacia Boat","price":3.0,"cat":"Transport"},{"name":"Dark Oak Boat","price":3.0,"cat":"Transport"},{"name":"Mangrove Boat","price":3.0,"cat":"Transport"},{"name":"Cherry Boat","price":4.0,"cat":"Transport"},{"name":"Snowball","price":1.0,"cat":"Decoration"},{"name":"Snow Block","price":5.0,"cat":"Decoration"},{"name":"Ice","price":5.0,"cat":"Decoration"},{"name":"Packed Ice","price":10.0,"cat":"Decoration"},{"name":"Blue Ice","price":25.0,"cat":"Decoration"},{"name":"Painting","price":25.0,"cat":"Decoration"},{"name":"Item Frame","price":10.0,"cat":"Decoration"},{"name":"Glow Item Frame","price":20.0,"cat":"Decoration"},{"name":"Armor Stand","price":15.0,"cat":"Decoration"},{"name":"Flower Pot","price":8.0,"cat":"Decoration"},{"name":"Bowl","price":0.5,"cat":"Decoration"},{"name":"Chest","price":4.0,"cat":"Decoration"},{"name":"Trapped Chest","price":10.0,"cat":"Decoration"},{"name":"Ender Chest","price":300.0,"cat":"Decoration"},{"name":"Shulker Box","price":700.0,"cat":"Decoration"},{"name":"Bed","price":68.0,"cat":"Decoration"},{"name":"Sponge","price":80.0,"cat":"Decoration"},{"name":"Honeycomb Block","price":40.0,"cat":"Decoration"},{"name":"Candle","price":20.0,"cat":"Decoration"},{"name":"Melon","price":8.0,"cat":"Decoration"},{"name":"Pumpkin","price":8.0,"cat":"Decoration"},{"name":"Oak Fence","price":1.0,"cat":"Decoration"},{"name":"Ladder","price":0.5,"cat":"Decoration"},{"name":"Scaffolding","price":0.5,"cat":"Decoration"},{"name":"Oak Stairs","price":1.0,"cat":"Decoration"},{"name":"Cobblestone Stairs","price":1.5,"cat":"Decoration"},{"name":"Oak Slab","price":0.5,"cat":"Decoration"},{"name":"Stone Slab","price":1.5,"cat":"Decoration"},{"name":"Oak Sign","price":1.5,"cat":"Decoration"},{"name":"Wall Sign","price":1.0,"cat":"Decoration"},{"name":"Redstone","price":30.0,"cat":"Redstone"},{"name":"Redstone Torch","price":32.0,"cat":"Redstone"},{"name":"Repeater","price":110.0,"cat":"Redstone"},{"name":"Comparator","price":60.0,"cat":"Redstone"},{"name":"Observer","price":30.0,"cat":"Redstone"},{"name":"Piston","price":20.0,"cat":"Redstone"},{"name":"Sticky Piston","price":25.0,"cat":"Redstone"},{"name":"Hopper","price":50.0,"cat":"Redstone"},{"name":"Dropper","price":20.0,"cat":"Redstone"},{"name":"Dispenser","price":58.0,"cat":"Redstone"},{"name":"Note Block","price":36.0,"cat":"Redstone"},{"name":"Daylight Detector","price":40.0,"cat":"Redstone"},{"name":"Target","price":10.0,"cat":"Redstone"},{"name":"Lever","price":1.0,"cat":"Redstone"},{"name":"Stone Button","price":6.0,"cat":"Redstone"},{"name":"Oak Button","price":4.0,"cat":"Redstone"},{"name":"Pressure Plate","price":6.0,"cat":"Redstone"},{"name":"Tripwire Hook","price":5.0,"cat":"Redstone"},{"name":"Crafting Table","price":2.5,"cat":"Workstations"},{"name":"Furnace","price":8.5,"cat":"Workstations"},{"name":"Blast Furnace","price":40.0,"cat":"Workstations"},{"name":"Smoker","price":15.0,"cat":"Workstations"},{"name":"Anvil","price":80.0,"cat":"Workstations"},{"name":"Enchanting Table","price":500.0,"cat":"Workstations"},{"name":"Grindstone","price":15.0,"cat":"Workstations"},{"name":"Stonecutter","price":15.0,"cat":"Workstations"},{"name":"Loom","price":10.0,"cat":"Workstations"},{"name":"Cartography Table","price":10.0,"cat":"Workstations"},{"name":"Fletching Table","price":10.0,"cat":"Workstations"},{"name":"Smithing Table","price":15.0,"cat":"Workstations"},{"name":"Composter","price":10.0,"cat":"Workstations"},{"name":"Lectern","price":20.0,"cat":"Workstations"},{"name":"Bell","price":200.0,"cat":"Workstations"},{"name":"Brewing Stand","price":50.0,"cat":"Workstations"},{"name":"Cauldron","price":30.0,"cat":"Workstations"},{"name":"Beacon","price":8000.0,"cat":"Workstations"},{"name":"Jukebox","price":100.0,"cat":"Workstations"},{"name":"Crafter","price":150.0,"cat":"Workstations"},{"name":"Glass Bottle","price":2.0,"cat":"Brewing"},{"name":"Water Bottle","price":3.0,"cat":"Brewing"},{"name":"Fermented Spider Eye","price":20.0,"cat":"Brewing"},{"name":"Wooden Sword","price":1.0,"cat":"Gear"},{"name":"Wooden Pickaxe","price":2.0,"cat":"Gear"},{"name":"Wooden Axe","price":2.0,"cat":"Gear"},{"name":"Wooden Shovel","price":1.0,"cat":"Gear"},{"name":"Wooden Hoe","price":2.0,"cat":"Gear"},{"name":"Stone Sword","price":2.5,"cat":"Gear"},{"name":"Stone Pickaxe","price":4.0,"cat":"Gear"},{"name":"Stone Axe","price":3.0,"cat":"Gear"},{"name":"Stone Shovel","price":1.5,"cat":"Gear"},{"name":"Stone Hoe","price":2.5,"cat":"Gear"},{"name":"Iron Sword","price":22.0,"cat":"Gear"},{"name":"Iron Pickaxe","price":22.0,"cat":"Gear"},{"name":"Iron Axe","price":22.0,"cat":"Gear"},{"name":"Iron Shovel","price":22.0,"cat":"Gear"},{"name":"Iron Hoe","price":22.0,"cat":"Gear"},{"name":"Iron Helmet","price":22.0,"cat":"Gear"},{"name":"Iron Chestplate","price":22.0,"cat":"Gear"},{"name":"Iron Leggings","price":22.0,"cat":"Gear"},{"name":"Iron Boots","price":22.0,"cat":"Gear"},{"name":"Shield","price":30.0,"cat":"Gear"},{"name":"Golden Sword","price":6.0,"cat":"Gear"},{"name":"Golden Pickaxe","price":6.0,"cat":"Gear"},{"name":"Golden Axe","price":6.0,"cat":"Gear"},{"name":"Golden Shovel","price":6.0,"cat":"Gear"},{"name":"Golden Hoe","price":6.0,"cat":"Gear"},{"name":"Golden Helmet","price":6.0,"cat":"Gear"},{"name":"Golden Chestplate","price":6.5,"cat":"Gear"},{"name":"Golden Leggings","price":6.0,"cat":"Gear"},{"name":"Golden Boots","price":6.0,"cat":"Gear"},{"name":"Chainmail Helmet","price":40.0,"cat":"Gear"},{"name":"Chainmail Chestplate","price":40.0,"cat":"Gear"},{"name":"Chainmail Leggings","price":50.0,"cat":"Gear"},{"name":"Chainmail Boots","price":30.0,"cat":"Gear"},{"name":"Leather Helmet","price":52.0,"cat":"Gear"},{"name":"Leather Chestplate","price":85.0,"cat":"Gear"},{"name":"Leather Leggings","price":75.0,"cat":"Gear"},{"name":"Leather Boots","price":42.0,"cat":"Gear"},{"name":"Diamond Sword","price":420.0,"cat":"Gear"},{"name":"Diamond Pickaxe","price":650.0,"cat":"Gear"},{"name":"Diamond Axe","price":650.0,"cat":"Gear"},{"name":"Diamond Shovel","price":210.0,"cat":"Gear"},{"name":"Diamond Hoe","price":400.0,"cat":"Gear"},{"name":"Diamond Helmet","price":1000.0,"cat":"Gear"},{"name":"Diamond Chestplate","price":1750.0,"cat":"Gear"},{"name":"Diamond Leggings","price":1500.0,"cat":"Gear"},{"name":"Diamond Boots","price":850.0,"cat":"Gear"},{"name":"Netherite Sword","price":2800.0,"cat":"Gear"},{"name":"Netherite Pickaxe","price":3500.0,"cat":"Gear"},{"name":"Netherite Axe","price":3500.0,"cat":"Gear"},{"name":"Netherite Shovel","price":1800.0,"cat":"Gear"},{"name":"Netherite Hoe","price":2500.0,"cat":"Gear"},{"name":"Netherite Helmet","price":4000.0,"cat":"Gear"},{"name":"Netherite Chestplate","price":5500.0,"cat":"Gear"},{"name":"Netherite Leggings","price":5000.0,"cat":"Gear"},{"name":"Netherite Boots","price":3500.0,"cat":"Gear"},{"name":"Bow","price":15.0,"cat":"Gear"},{"name":"Crossbow","price":40.0,"cat":"Gear"},{"name":"Arrow","price":3.5,"cat":"Gear"},{"name":"Spectral Arrow","price":5.0,"cat":"Gear"},{"name":"Leather Horse Armor","price":50.0,"cat":"Gear"},{"name":"Iron Horse Armor","price":100.0,"cat":"Gear"},{"name":"Golden Horse Armor","price":80.0,"cat":"Gear"},{"name":"Diamond Horse Armor","price":500.0,"cat":"Gear"},{"name":"Music Disc 13","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Cat","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Blocks","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Chirp","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Far","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Mall","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Mellohi","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Stal","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Strad","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Ward","price":150.0,"cat":"Music Discs"},{"name":"Music Disc 11","price":300.0,"cat":"Music Discs"},{"name":"Music Disc Wait","price":150.0,"cat":"Music Discs"},{"name":"Music Disc Otherside","price":300.0,"cat":"Music Discs"},{"name":"Music Disc 5","price":500.0,"cat":"Music Discs"},{"name":"Music Disc Pigstep","price":400.0,"cat":"Music Discs"},{"name":"Music Disc Relic","price":400.0,"cat":"Music Discs"},{"name":"Music Disc Creator","price":300.0,"cat":"Music Discs"},{"name":"Music Disc Precipice","price":300.0,"cat":"Music Discs"}];
+
+      // Upload in batches of 400 (Firestore limit is 500 per batch)
+      const BATCH_SIZE = 400;
+      for (let i = 0; i < SEED.length; i += BATCH_SIZE) {
+        const batch = writeBatch(db);
+        SEED.slice(i, i + BATCH_SIZE).forEach(item => {
+          const ref = doc(collection(db, "items"));
+          batch.set(ref, { name: item.name, price: item.price, cat: item.cat });
+        });
+        await batch.commit();
+      }
+
+      await loadItems();
+      showToast(`✔ Seeded ${SEED.length} items to Firestore!`);
+    } catch(e) {
+      showToast('Seed failed: ' + e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⬆ Upload All Items';
+      setSaving(false);
+    }
+  };
+
+  // ── SAVING OVERLAY ───────────────────────────────────────────
+  function setSaving(on) {
+    document.getElementById('savingOverlay').classList.toggle('show', on);
+  }
+
+  // ── TOAST ────────────────────────────────────────────────────
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (type === 'error' ? ' error' : ' success');
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── KEYBOARD ─────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeItemModal(); closeCatModal(); closeConfirm(); cancelEdit();
+      document.getElementById('seedModal').classList.remove('open');
+    }
+    if (e.key === 'n' && !e.target.matches('input,select') && !document.querySelector('.modal-overlay.open')) {
+      e.preventDefault(); openAddItem();
+    }
+  });
+</script>
+</body>
+</html>
