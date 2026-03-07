@@ -186,10 +186,10 @@ function renderItem(item, q, showCat = false) {
     const p = pc(item.price);
     const safeN = item.name.replace(/'/g,"\\'");
     return `<div class="item${inCmp?' in-compare':''}" onclick="handleItemClick('${safeN}',${item.price},'${item.cat.replace(/'/g,"\\'")}')">
+    <button class="add-compare-btn" title="Add to compare">+</button>
     <div class="item-name">${nameHtml}${showCat?`<span class="item-cat-tag">${item.cat}</span>`:''}</div>
     <div class="item-right">
         <span class="item-price ${p}">💰 ${fmt(item.price)}</span>
-        <button class="add-compare-btn" title="Add to compare">+</button>
     </div>
     </div>`;
 }
@@ -236,7 +236,7 @@ function toggleCompare(name, price, cat) {
         compareList.splice(idx, 1);
         showToast(`Removed: ${name}`);
     } else {
-        if (compareList.length >= 8) { showToast('⚠ Max 8 items to compare!'); return; }
+        if (compareList.length >= 8) { showToast('⚠ Max 8 items to compare!', 'red'); return; }
         compareList.push({ name, price, cat });
         showToast(`Added: ${name}`);
     }
@@ -251,8 +251,8 @@ function updateCompareTray() {
     document.getElementById('compareCount').textContent = count;
     document.getElementById('compareCountHeader').textContent = count;
 
-    if (count === 0) { tray.style.display = 'none'; return; }
-    tray.style.display = 'block';
+    if (count === 0) { tray.classList.remove('open'); return; }
+    tray.classList.add('open');
     trayItems.innerHTML = compareList.map(item => `
         <div class="tray-item">
         ${esc(item.name)} <span class="tray-item-price">💰${fmt(item.price)}</span>
@@ -345,9 +345,11 @@ function copyIP() {
 }
 
 // Toast
-function showToast(msg) {
+function showToast(msg, type) {
     const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
+    t.textContent = msg;
+    t.className = 'toast' + (type === 'red' ? ' toast-red' : '');
+    t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2000);
 }
 

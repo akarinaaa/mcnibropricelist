@@ -12,52 +12,52 @@
   <body>
 
     <!-- HEADER -->
-    <div class="header">
-      <div class="header-inner">
+    <div class="header" style="display:flex;align-items:center;padding:0 20px;gap:12px;">
+      <div class="header-inner" style="display:flex;align-items:center;gap:12px;flex:1;flex-wrap:nowrap;padding:10px 0;">
         <div class="logo">
-          <img src="img/mcnibro.png" alt="MCniBro" style="height:38px;display:block;image-rendering:pixelated;">
-          <br>
+          <img src="img/mcnibro.png" alt="MCniBro" style="height:48px;display:block;image-rendering:pixelated;margin-bottom:6px;">
           <span>💰 SELL PRICE LIST</span>
         </div>
-        <div class="server-ip-box" onclick="copyIP()">
-          <div>
-            <div class="server-ip-label">🌐 Server IP</div>
-            <div class="server-ip-value">kuma.mcnibro.net</div>
+        <div class="header-controls">
+          <div class="header-controls-top">
+            <div class="search-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="searchInput" placeholder="Search items... e.g. diamond, sword, netherite" oninput="applyFilters()">
+            </div>
+            <div class="filter-row">
+              <span class="filter-label">Min 💰</span>
+              <input type="number" id="minPrice" placeholder="0" min="0" oninput="applyFilters()">
+              <span class="filter-label">Max 💰</span>
+              <input type="number" id="maxPrice" placeholder="∞" min="0" oninput="applyFilters()">
+            </div>
           </div>
-          <button class="copy-btn" id="copyBtn">COPY</button>
-        </div>
-        <div class="header-stats">
-          <div class="stat-pill">Items: <span id="totalCount">0</span></div>
-          <div class="stat-pill">Compare: <span id="compareCountHeader">0</span>/8</div>
+          <div class="filter-row">
+            <button class="btn" id="sortAsc" onclick="setGlobalSort('asc')">Price ↑</button>
+            <button class="btn" id="sortDesc" onclick="setGlobalSort('desc')">Price ↓</button>
+            <button class="btn" id="sortAZ" onclick="setGlobalSort('az')">A–Z</button>
+            <button class="btn btn-danger" onclick="clearAll()">✕ Clear</button>
+            <button class="btn btn-compare" id="compareBtn" onclick="toggleCompareMode()">
+              ⚖ Compare <span class="compare-count" id="compareCount">0</span>
+            </button>
+            <div class="compare-mode-hint" id="compareModeHint">⚡ Click items to compare</div>
+          </div>
         </div>
       </div>
+      <div class="server-ip-box" onclick="copyIP()" style="flex-shrink:0;margin-left:auto;">
+        <div>
+          <div class="server-ip-label">🌐 Server IP</div>
+          <div class="server-ip-value">kuma.mcnibro.net</div>
+        </div>
+        <button class="copy-btn" id="copyBtn">COPY</button>
+      </div>
+      <div class="header-stats" style="flex-shrink:0;">
+        <div class="stat-pill">Items: <span id="totalCount">0</span></div>
+        <div class="stat-pill">Compare: <span id="compareCountHeader">0</span>/8</div>
+      </div>
+    </div>
     </div>
 
-    <!-- CONTROLS -->
-    <div class="controls-wrap">
-      <div class="controls">
-        <div class="search-wrap">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Search items... e.g. diamond, sword, netherite" oninput="applyFilters()">
-        </div>
-        <div class="filter-row">
-          <span class="filter-label">Min 💰</span>
-          <input type="number" id="minPrice" placeholder="0" min="0" oninput="applyFilters()">
-          <span class="filter-label">Max 💰</span>
-          <input type="number" id="maxPrice" placeholder="∞" min="0" oninput="applyFilters()">
-        </div>
-        <div class="filter-row">
-          <button class="btn" id="sortAsc" onclick="setGlobalSort('asc')">Price ↑</button>
-          <button class="btn" id="sortDesc" onclick="setGlobalSort('desc')">Price ↓</button>
-          <button class="btn" id="sortAZ" onclick="setGlobalSort('az')">A–Z</button>
-          <button class="btn btn-danger" onclick="clearAll()">✕ Clear</button>
-          <button class="btn btn-compare" id="compareBtn" onclick="toggleCompareMode()">
-            ⚖ Compare <span class="compare-count" id="compareCount">0</span>
-          </button>
-          <div class="compare-mode-hint" id="compareModeHint">⚡ Click items to compare</div>
-        </div>
-      </div>
-    </div>
+    <br>
 
     <!-- CATEGORY TABS -->
     <div class="tabs-wrap">
@@ -88,13 +88,14 @@
 
     <!-- COMPARE TRAY -->
     <div class="compare-tray" id="compareTray">
-      <div class="compare-tray-inner">
+      <div class="tray-header">
         <div class="tray-label">⚖ COMPARING</div>
-        <div class="tray-items" id="trayItems"></div>
-        <div class="tray-actions">
-          <button class="btn-open-compare" onclick="openCompare()">View Compare</button>
-          <button class="btn-clear-compare" onclick="clearCompare()">Clear All</button>
-        </div>
+        <button class="tray-close-btn" onclick="clearCompare()">✕</button>
+      </div>
+      <div class="tray-items" id="trayItems"></div>
+      <div class="tray-actions">
+        <button class="btn-open-compare" onclick="openCompare()">View Compare</button>
+        <button class="btn-clear-compare" onclick="clearCompare()">Clear All</button>
       </div>
     </div>
 
@@ -122,5 +123,22 @@
     </footer>
 
     <script src="js/broscript.js"></script>
+    <script>
+      function updateTrayBounds() {
+        const header = document.querySelector('.header');
+        const footer = document.querySelector('.footer');
+        const tray = document.getElementById('compareTray');
+        if (!tray) return;
+        const hh = header ? header.offsetHeight : 80;
+        const footerVisible = footer && parseFloat(getComputedStyle(footer).opacity) > 0.05;
+        const fh = footerVisible ? footer.offsetHeight : 0;
+        tray.style.top = hh + 'px';
+        tray.style.height = 'calc(100vh - ' + hh + 'px - ' + fh + 'px)';
+        document.documentElement.style.setProperty('--header-h', hh + 'px');
+      }
+      window.addEventListener('load', updateTrayBounds);
+      window.addEventListener('resize', updateTrayBounds);
+      setInterval(updateTrayBounds, 200);
+    </script>
   </body>
 </html>
