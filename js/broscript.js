@@ -371,4 +371,15 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeCompare();
 });
 
+
+const footer = document.querySelector('.footer');
+function handleFooterVisibility() {
+    const scrolledToBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 60;
+    footer.style.opacity = scrolledToBottom ? '1' : '0';
+    footer.style.pointerEvents = scrolledToBottom ? 'auto' : 'none';
+    footer.style.transform = scrolledToBottom ? 'translateY(0)' : 'translateY(100%)';
+}
+window.addEventListener('scroll', handleFooterVisibility);
+handleFooterVisibility();
+
 init();
