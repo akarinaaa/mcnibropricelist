@@ -374,12 +374,15 @@ document.addEventListener('keydown', e => {
 
 const footer = document.querySelector('.footer');
 function handleFooterVisibility() {
+    const pageScrollable = document.body.scrollHeight > window.innerHeight;
     const scrolledToBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 60;
-    footer.style.opacity = scrolledToBottom ? '1' : '0';
-    footer.style.pointerEvents = scrolledToBottom ? 'auto' : 'none';
-    footer.style.transform = scrolledToBottom ? 'translateY(0)' : 'translateY(100%)';
+    const show = !pageScrollable || scrolledToBottom;
+    footer.style.opacity = show ? '1' : '0';
+    footer.style.pointerEvents = show ? 'auto' : 'none';
+    footer.style.transform = show ? 'translateY(0)' : 'translateY(100%)';
 }
 window.addEventListener('scroll', handleFooterVisibility);
+window.addEventListener('resize', handleFooterVisibility);
 handleFooterVisibility();
 
 init();
