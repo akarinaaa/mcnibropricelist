@@ -130,16 +130,9 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
       import { getFirestore, collection, getDocs, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-      const FIREBASE_CONFIG = {
-        apiKey: "AIzaSyCFfSDOlztGJ3qeGOWdqHZSOFK9H5-2y-I",
-        authDomain: "mcnibro.firebaseapp.com",
-        projectId: "mcnibro",
-        storageBucket: "mcnibro.firebasestorage.app",
-        messagingSenderId: "1042312404090",
-        appId: "1:1042312404090:web:d51bd1933fd3508f64efc3"
-      };
-
+      import { getAppConfig } from "js/utils.js";
+      
+      const FIREBASE_CONFIG = getAppConfig();
       const app = initializeApp(FIREBASE_CONFIG);
       const db = getFirestore(app);
 
